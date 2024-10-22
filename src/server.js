@@ -11,6 +11,7 @@ const PORT = Number(env('PORT', '3000'));
 export const setupServer = async () => {
     const app = express();
     app.use(express.json());
+    app.use(cors());
     app.use(
         pino({
             transport: {
@@ -18,8 +19,12 @@ export const setupServer = async () => {
             }
         })
     );
-    app.use(cors());
+    app.get('/', async (req, res) => {
+        res.status(200).json({
+            message: "Hello User!",
 
+        });
+    });
     app.get('/contacts', async (req, res) => {
         const contacts = await getAllContacts();
         res.status(200).json({
