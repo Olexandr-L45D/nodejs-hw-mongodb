@@ -2,20 +2,15 @@
 // Тепер у файлі src/index.js ми створимо функцію bootstrap,
 //  яка буде ініціалізувати підключення до бази даних, після чого запускати сервер.
 import { setupServer } from './server.js';
-import { initMongoDB } from './db/initMongoDB.js';
+import { initMongoConnection } from './db/initMongoConnection.js';
 
-const bootInicialezit = async () => {
-    await initMongoDB();
+const bootstrap = async () => {
+    await initMongoConnection();
     setupServer();
 };
-bootInicialezit();
+bootstrap();
 
-// const bootstrap = async () => {
-//     await initMongoDB();
-//     startServer();
-// };
 
-// bootstrap();
 // litvinenko1978aleks@gmail.com
 // для деплою на Render нижче пароль
 // password to Render (_=sd$xeUh%9%%Un)

@@ -4,15 +4,8 @@ import pino from 'pino-http';
 import cors from 'cors';
 import { env } from './utils/env.js';
 
-import { getAllStudents, getStudentById } from './services/students.js';
+import { getAllContacts, getContactsById } from './services/contacts.js';
 
-
-
-// const app = express();
-// const PORT = 3000;
-// dotenv.config();
-// Для доступу до змінних оточення в середовищі Node.js використовується глобальний об'єкт process.env, який доступний у коді будь-якого модуля (так само як window або document доступні у браузері).
-// const PORT = Number(process.env.PORT);
 const PORT = Number(env('PORT', '3000'));
 
 export const setupServer = async () => {
@@ -27,54 +20,29 @@ export const setupServer = async () => {
     );
     app.use(cors());
 
-    app.get('/', (req, res) => {
-        res.json({
-            message: 'Hello Alex!'
-        });
-    });
-    // app.use('*', (req, res, next) => {
-    //     res.status(404).json({
-    //         message: 'Not found',
-    //     });
-    //     // next();
-    // });
-    app.get('/students', async (req, res) => {
-        const students = await getAllStudents();
-
+    app.get('/contacts', async (req, res) => {
+        const contacts = await getAllContacts();
         res.status(200).json({
-            data: students,
+            message: "Successfully found contacts!",
+            data: contacts,
         });
     });
 
-    app.get('/students/:studentId', async (req, res, next) => {
-        const { studentId } = req.params;
-        const student = await getStudentById(studentId);
-
+    app.get('/contacts/:contactId', async (req, res, next) => {
+        const { contactId } = req.params;
+        const contact = await getContactsById(contactId);
         // Відповідь, якщо контакт не знайдено
-        if (!student) {
+        if (!contact) {
             res.status(404).json({
-                message: 'Student not found'
+                message: 'Contact not found'
             });
             return;
         }
-
         // Відповідь, якщо контакт знайдено
         res.status(200).json({
-            data: student,
-        });
-        next();
-    });
-
-    app.use((req, res) => {
-        res.status(404).json({
-            message: 'Not found',
-        });
-        // next();
-    });
-    app.use((err, req, res, next) => {
-        res.status(500).json({
-            message: 'Something went wrong',
-            error: err.message,
+            status: 200,
+            message: `Successfully found contact with id ${contactId}!`,
+            data: contact,
         });
         next();
     });
@@ -84,5 +52,5 @@ export const setupServer = async () => {
     });
 };
 
-// http://localhost:3000/students - ми отримаємо масив усіх студентів
-// http://localhost:3000/students/:studentId
+// http://localhost:3000/contacts - ми отримаємо масив усіх студентів
+// http://localhost:3000/contacts/:contactId
