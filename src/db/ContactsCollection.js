@@ -9,7 +9,7 @@ const contactsSchema = new Schema(
             required: true,
         },
         phoneNumber: {
-            type: Number,
+            type: String,
             required: true,
         },
         email: {
@@ -31,6 +31,9 @@ const contactsSchema = new Schema(
     },
 );
 export const ContactsCollection = model('contacts', contactsSchema);
+
+
+
 
 // timestamps: true при створенні моделі.Це додає до об'єкту два поля:
 // createdAt(дата створення) та updatedAt(дата оновлення), і їх не потрібно додавати вручну.
