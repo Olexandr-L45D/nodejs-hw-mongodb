@@ -17,4 +17,4 @@ router.patch('/:contactId', ctrlWrapper(patchContactControl));
 export default router;
 
 // http://localhost:3000/contacts - in Postmen - ми отримаємо масив усіх contacts
-// http://localhost:3000/contacts/:contactId - one contacts
+// http://localhost:3000/contacts/:contactId - one contacts and new functions
