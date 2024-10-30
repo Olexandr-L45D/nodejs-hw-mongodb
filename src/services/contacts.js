@@ -1,6 +1,6 @@
 //
 import { ContactsCollection } from '../db/ContactsCollection.js';
-
+// сервісні функції з коллекції на сервері роблять обробку різними методами по потребі (find, findById, create,findOneAndDelete, findOneAndUpdate )
 export const getAllContacts = async () => {
     const contacts = await ContactsCollection.find();
     return contacts;

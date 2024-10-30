@@ -62,7 +62,7 @@ export const upsertContactControl = async (req, res, next) => {
         data: resultUpdate.contact,
     });
 };
-// Оскільки ми вже маємо функцію сервісу updateStudent, яку ми до цього створили для PUT ендпоінта, то можемо не створювати нову, а перевикористати її.Єдина відмінність буде полягати в тому, що ми не будемо під час виклику нічого передавати третім аргументом options
+// Оскільки ми вже маємо функцію сервісу updateContactById, яку ми до цього створили для PUT ендпоінта, то можемо не створювати нову, а перевикористати її.Єдина відмінність буде полягати в тому, що ми не будемо під час виклику нічого передавати третім аргументом options
 export const patchContactControl = async (req, res, next) => {
     const { contactId } = req.params;
     const resultPatch = await updateContactById(contactId, req.body);

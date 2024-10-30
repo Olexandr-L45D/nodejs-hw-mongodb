@@ -1,4 +1,4 @@
-// ctrlWrapper.js - (типу загальний контроллер - controller) Щоб уникнути повторення коду, створимо допоміжну функцію-обгортку.
+// ctrlWrapper.js - створимо допоміжну функцію-обгортку.
 export const ctrlWrapper = (controller) => {
     return async (req, res, next) => {
         try {
