@@ -1,7 +1,7 @@
 import {
     getAllContacts, getContactsById,
     createNewContact, deletContactById, updateContactById
-} from './services/contacts.js';
+} from '../services/contacts.js';
 import createHttpError from 'http-errors';
 
 export const contactAllControl = async (req, res) => {
