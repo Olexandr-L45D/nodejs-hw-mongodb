@@ -1,6 +1,7 @@
 // src/db / models / student.js
 
 import { model, Schema } from 'mongoose';
+import { typeList } from '../constants/contacts.js';
 
 const contactsSchema = new Schema(
     {
@@ -21,15 +22,23 @@ const contactsSchema = new Schema(
         },
         contactType: {
             type: String,
-            enum: ['work', 'home', 'personal'],
+            enum: typeList,
             required: true,
             default: 'personal',
         },
     },
     {
+        versionKey: false,
         timestamps: true,
     },
 );
+// роблю хук додаткової валідації на схемі
+contactsSchema.post('save', (error, data, next) => {
+    console.log("after save middleware");
+    next();
+
+});
+
 export const ContactsCollection = model('contacts', contactsSchema);
 
 

@@ -3,9 +3,14 @@ import {
     createNewContact, deletContactById, updateContactById
 } from '../services/contacts.js';
 import createHttpError from 'http-errors';
+import { createContactsSchema } from '../validation/contacts.js';
+import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 
 export const contactAllControl = async (req, res) => {
-    const contacts = await getAllContacts();
+    const { page, perPage } = parsePaginationParams(req.query);
+    const contacts = await getAllContacts({
+        page, perPage
+    });
     res.json({
         status: 200,
         message: 'Successfully found contacts',
@@ -38,6 +43,13 @@ export const contactByIdControl = async (req, res, next) => {
     });
 };
 export const createContactController = async (req, res) => {
+    const { error } = createContactsSchema.validate(req.body, {
+        abortEarly: false,
+    });
+    if (error) {
+        throw createHttpError(400, error.message);
+    }
+
     const contact = await createNewContact(req.body);
     res.status(201).json({
         status: 201,
