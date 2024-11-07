@@ -62,3 +62,9 @@ export const updateContactById = async (contactId, payload, options = {}) => {
 
 // type - відображає тип контакту, значення властивості contactType
 // isFavourite - відображає чи є контакт обраним
+// if (filter.contactType) {
+//     contactsQuery.where('contactType').equals(filter.contactType);
+// }
+// if (filter.isFavourite !== undefined) {
+//     contactsQuery.where('isFavourite').equals(filter.isFavourite);
+// }
