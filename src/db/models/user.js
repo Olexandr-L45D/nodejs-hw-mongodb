@@ -1,4 +1,4 @@
-// new model to BD for auth
+// new model to BD for User on auth
 import { model, Schema } from 'mongoose';
 
 const User = new Schema(

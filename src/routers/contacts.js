@@ -9,7 +9,9 @@ import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 import { createContactsSchema, updateContactsSchema } from '../validation/contacts.js';
 import { validateBody } from '../middlewares/validateBody.js';
 import { isValidId } from '../middlewares/isValidId.js';
+import { authenticate } from '../middlewares/authenticate.js';
 
+router.use(authenticate);
 router.get('/', ctrlWrapper(contactAllControl));
 router.get('/:contactId', isValidId, ctrlWrapper(contactByIdControl));
 router.post('/', validateBody(createContactsSchema), ctrlWrapper(createContactController));

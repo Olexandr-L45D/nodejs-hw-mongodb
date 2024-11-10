@@ -49,6 +49,7 @@ export const contactByIdControl = async (req, res, next) => {
     });
 };
 export const createContactController = async (req, res) => {
+    const userId = req.user._id;
     const { error } = createContactsSchema.validate(req.body, {
         abortEarly: false,
     });
@@ -60,7 +61,7 @@ export const createContactController = async (req, res) => {
     res.status(201).json({
         status: 201,
         message: 'Successfully created a contact!',
-        data: contact
+        data: { contact, userId }
     });
 };
 // щоб функція updateContactById могла не тільки оновлювати, але й створювати ресурс при його відсутності, необхідно їй аргументом додатково передати { upsert: true }.
