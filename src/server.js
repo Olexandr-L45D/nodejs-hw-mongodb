@@ -35,7 +35,8 @@ export const setupServer = async () => {
         });
     });
     app.use(authenticate);
-    app.use("/contacts", contactsRout, authRouter); // Додаємо роутер з запитами на: (get, post, put, patch, delete)
+    app.use("/contacts", contactsRout); // Додаємо роутер з запитами на: (get, post, put, patch, delete)
+    app.use("/auth", authRouter);
     app.use(notFoundHandler); // Додаємо notFoundHandler до app як middleware
     app.use(errorHandler); // Додаємо errorHandler до app як middleware
     app.listen(PORT, () => {
@@ -43,4 +44,4 @@ export const setupServer = async () => {
     });
 };
 
-// hw4-validation для монгодб
+

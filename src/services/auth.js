@@ -2,7 +2,7 @@ import createHttpError from "http-errors";
 import { randomBytes } from 'crypto';
 import bcrypt from 'bcrypt';
 import { FIFTEEN_MINUTES, ONE_DAY } from "../constants/index.js";
-import { SessionCollection } from "../db/models/session.js";
+import { SessionsCollection } from "../db/models/session.js";
 import { UsersCollection } from "../db/models/user.js";
 
 
@@ -28,11 +28,11 @@ export const loginUser = async (payload) => {
     if (!isEqual) {
         throw createHttpError(401, 'Unautorized');
     }
-    await SessionCollection.deleteOne({ userId: user._id });
+    await SessionsCollection.deleteOne({ userId: user._id });
     // Далі, функція видаляє попередню сесію користувача, якщо така існує, з колекції сесій. Це робиться для уникнення конфліктів з новою сесією.
     const accessToken = randomBytes(30).toString('base64');
     const refreshToken = randomBytes(30).toString('base64');
-    return await SessionCollection.create({
+    return await SessionsCollection.create({
         userId: user._id, accessToken, refreshToken,
         accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
         refreshTokenValidUntil: new Date(Date.now() + ONE_DAY),
@@ -42,7 +42,7 @@ export const loginUser = async (payload) => {
 // Нарешті, функція створює нову сесію в базі даних. Нова сесія включає ідентифікатор користувача,
 // згенеровані токени доступу та оновлення: accessToken, refreshToken, а також часові межі їхньої дії.Токен доступу має обмежений термін дії(наприклад, 15 хвилин), тоді як токен для оновлення діє довше(наприклад, один день).
 export const logoutUser = async (sessionId) => {
-    await SessionCollection.deleteOne({
+    await SessionsCollection.deleteOne({
         _id: sessionId
     });
 };
@@ -59,7 +59,7 @@ const createSession = () => {
 export const refreshUsersSession = async ({
     sessionId, refreshToken
 }) => {
-    const session = await SessionCollection.findOne(
+    const session = await SessionsCollection.findOne(
         {
             _id: sessionId,
             refreshToken,
@@ -73,11 +73,15 @@ export const refreshUsersSession = async ({
         throw createHttpError(401, 'Session token expired');
     }
     const newSession = createSession();
-    await SessionCollection.deleteOne({
+    await SessionsCollection.deleteOne({
         _id: sessionId, refreshToken
     });
-    return await SessionCollection.create({
+    return await SessionsCollection.create({
         userId: session.userId,
         ...newSession,
     });
 };
+
+// "name": "Anna Solo",
+//     "email": "AnnaSl@gmail.com",
+//         "password": "123Anna"

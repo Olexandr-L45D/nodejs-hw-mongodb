@@ -2,8 +2,7 @@
 import { SORT_ORDER } from '../constants/index.js';
 import { ContactsCollection } from '../db/ContactsCollection.js';
 import { calculatePaginationData } from '../utils/calculatePaginationData.js';
-// сервісні функції з коллекції на сервері роблять обробку різними методами
-// по потребі(find, findById, create, findOneAndDelete, findOneAndUpdate)
+// сервісні функції з коллекції на сервері роблять обробку різними методами по потребі(find, findById, create, findOneAndDelete, findOneAndUpdate)
 export const getAllContacts = async (
     { page = 1, perPage = 4, sortOrder = SORT_ORDER.ASC, sortBy = '_id', filter = {}, }) => {
     const limit = perPage;
@@ -25,7 +24,7 @@ export const getAllContacts = async (
         ...paginationData,
     };
 };
-// getAllContacts повертає - видає весь масив студентів згідно шаблону описаному в studentsSchema за рах методу find()
+// getAllContacts повертає - видає весь масив студентів згідно шаблону описаному в studentsSchema за рах методу find(), findById
 export const getContactsById = async (contactId, userId) => {
     const contact = await ContactsCollection.findById(contactId, userId);
     return contact;
@@ -35,15 +34,12 @@ export const createNewContact = async (payload) => {
     const contact = await ContactsCollection.create(payload);
     return contact;
 };
-//  в Mongoose використовується метод:  Model.create(doc) = create(payload)
-// doc — перший аргумент (обов’язковий), який містить дані (об'єкт або масив об'єктів)
-// deletContactById - delet 1 contact By Id!
+//  в Mongoose використовується метод:  Model.create(doc) = create(payload) doc — перший аргумент (обов’язковий), який містить дані (об'єкт або масив об'єктів)
 export const deletContactById = async (contactId, userId) => {
     const contact = await ContactsCollection.findOneAndDelete({ _id: contactId }, { _id: userId });
     return contact;
 };
-// Для видалення документа з колекції в Mongoose використовується метод:
-//  findOneAndDelete(filter, options, callback)
+// Для видалення документа з колекції в Mongoose використовується метод:  findOneAndDelete(filter, options, callback)
 export const updateContactById = async (contactId, userId, payload, options = {}) => {
     const rawResult = await ContactsCollection.findOneAndUpdate(
         { _id: contactId }, { _id: userId }, payload,
@@ -60,6 +56,12 @@ export const updateContactById = async (contactId, userId, payload, options = {}
             Boolean(rawResult?.lastErrorObject?.upserted),
     };
 };
+
+
+
+
+
+
 // Model.findOneAndUpdate(query, update, options, callback)
 
 // type - відображає тип контакту, значення властивості contactType
