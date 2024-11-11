@@ -4,11 +4,9 @@ import pino from 'pino-http';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { env } from './utils/env.js';
-import contactsRout from './routers/contacts.js';
-import authRouter from './routers/auth.js';
+import router from './routers/index.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
-import { authenticate } from './middlewares/authenticate.js';
 
 const PORT = Number(env('PORT', '3000'));
 
@@ -21,22 +19,12 @@ export const setupServer = async () => {
     }));
     app.use(cors());
     app.use(cookieParser());
-    app.use(
-        pino({
-            transport: {
-                target: 'pino-pretty',
-            }
-        })
-    );
+    app.use(pino({ transport: { target: 'pino-pretty', } }));
     app.get('/', async (req, res) => {
-        res.status(200).json({
-            message: "Hello User!",
-
-        });
+        res.status(200).json({ message: "Hello User!", });
     });
-    app.use(authenticate);
-    app.use("/contacts", contactsRout); // Додаємо роутер з запитами на: (get, post, put, patch, delete)
-    app.use("/auth", authRouter);
+
+    app.use("/contacts", router); // Додаємо роутер з запитами на: (get, post, put, patch, delete and routers for auth)
     app.use(notFoundHandler); // Додаємо notFoundHandler до app як middleware
     app.use(errorHandler); // Додаємо errorHandler до app як middleware
     app.listen(PORT, () => {
