@@ -98,3 +98,10 @@ export const refreshUsersSession = async ({
 // "name": "Anna Solo",
 //     "email": "AnnaSl@gmail.com",
 //         "password": "123Anna"
+
+// {
+//     "name": "Anna Solovey",
+//         "email": "AnnaSol123_anna@gmail.com",
+//             "password": "123AnnaSl"
+// }
+// "email": "AnnaSol123_anna@gmail.com"
