@@ -7,8 +7,8 @@ const User = new Schema(
         name: { type: String, requirerd: true },
         email: { type: String, match: emailRegexp, requirerd: true, unique: true },
         password: { type: String, requirerd: true },
-        createdAt: { type: Date },
-        updatedAt: { type: Date },
+        // createdAt: { type: Date },
+        // updatedAt: { type: Date },
 
     },
     { timestamps: true, varsionKey: false },

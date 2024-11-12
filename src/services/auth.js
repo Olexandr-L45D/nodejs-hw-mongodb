@@ -1,7 +1,7 @@
 import createHttpError from "http-errors";
 import { randomBytes } from 'crypto';
 import bcrypt from 'bcrypt';
-import { FIFTEEN_MINUTES, ONE_DAY } from "../constants/index.js";
+import { FIFTEEN_MINUTES, THERTY_DAY } from "../constants/index.js";
 import { SessionsCollection } from "../db/models/session.js";
 import { UsersCollection } from "../db/models/user.js";
 
@@ -48,7 +48,7 @@ export const loginUser = async ({ email, password }) => {
         accessToken, refreshToken,
         accessTokenValidUntil: Date.now() + FIFTEEN_MINUTES,
         // accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
-        refreshTokenValidUntil: Date.now() + ONE_DAY,
+        refreshTokenValidUntil: Date.now() + THERTY_DAY,
     });
 };
 
@@ -60,12 +60,12 @@ export const logoutUser = async (sessionId) => {
     });
 };
 const createSession = () => {
-    const accessToken = randomBytes(30).toString('base46');
+    const accessToken = randomBytes(30).toString('base64');
     const refreshToken = randomBytes(30).toString('base64');
     return {
         accessToken, refreshToken,
         accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
-        refreshTokenValidUntil: new Date(Date.now() + ONE_DAY),
+        refreshTokenValidUntil: new Date(Date.now() + THERTY_DAY),
     };
 };
 // refreshUsersSession виконує процес оновлення сесії користувача і взаємодію з базою даних через асинхронні запити.

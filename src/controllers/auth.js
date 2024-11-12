@@ -1,5 +1,5 @@
 
-import { ONE_DAY } from "../constants/index.js";
+import { THERTY_DAY } from "../constants/index.js";
 import { registerUser, loginUser, logoutUser, refreshUsersSession } from "../services/auth.js";
 
 export const registerUserController = async (req, res) => {
@@ -17,11 +17,11 @@ export const loginUserController = async (req, res) => {
     res.cookie('refreshToken', session.refreshToken, {
         httpOnly: true,
         // http-only cookie, що означає, що він доступний тільки через HTTP-запити і не може бути доступним через JavaScript на стороні клієнта
-        expires: new Date(Date.now() + ONE_DAY),
+        expires: new Date(Date.now() + THERTY_DAY),
     });
     res.cookie('sessioId', session._id, {
         httpOnly: true,
-        expires: new Date(Date.now() + ONE_DAY),
+        expires: new Date(Date.now() + THERTY_DAY),
     });
     res.status(200).json({
         status: 200,
@@ -35,20 +35,20 @@ export const loginUserController = async (req, res) => {
 export const logoutUserController = async (req, res) => {
     if (req.cookies.sessionId) {
         await logoutUser(req.cookies.sessionId);
-        res.clearCookie('sessionId');
-        res.clearCookie('refreshToken');
-        res.status(204).send();
     };
+    res.clearCookie('sessionId');
+    res.clearCookie('refreshToken');
+    res.status(204).send();
 };
 
 const setupSession = (res, session) => {
     res.cookie('refreshToken', session.refreshToken, {
         httpOnly: true,
-        expires: new Date(Date.now() + ONE_DAY),
+        expires: new Date(Date.now() + THERTY_DAY),
     });
     res.cookie('sessionId', session._id, {
         httpOnly: true,
-        expires: new Date(Date.now() + ONE_DAY),
+        expires: new Date(Date.now() + THERTY_DAY),
     });
 };
 
