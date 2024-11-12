@@ -18,5 +18,8 @@ router.post('/', validateBody(createContactsSchema), ctrlWrapper(createContactCo
 router.delete('/:contactId', isValidId, ctrlWrapper(deleteContactControl));
 router.put('/:contactId', isValidId, validateBody(updateContactsSchema), ctrlWrapper(upsertContactControl));
 router.patch('/:contactId', isValidId, validateBody(updateContactsSchema), ctrlWrapper(patchContactControl));
-// прибираю ендпоінт (/contacts) щоб не повторювати і додаю при виклику на сервері першим аргументом
+
 export default router;
+
+
+// прибираю ендпоінт (/contacts) щоб не повторювати і додаю при виклику на сервері першим аргументом

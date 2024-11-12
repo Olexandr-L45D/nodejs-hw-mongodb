@@ -4,21 +4,19 @@ import { loginUserSchema, registerUserSchema } from '../validation/auth.js';
 import { loginUserController, logoutUserController, registerUserController, refreshUserSessionController } from '../controllers/auth.js';
 import { validateBody } from '../middlewares/validateBody.js';
 
-const router = Router();
+const authRouter = Router();
 
-router.post(
-    '/register',
+authRouter.post('/register',
     validateBody(registerUserSchema),
     ctrlWrapper(registerUserController)
 );
-router.post(
-    '/login',
+authRouter.post('/login',
     validateBody(loginUserSchema),
     ctrlWrapper(loginUserController)
 );
-router.post(
-    '/logout',
+authRouter.post('/logout',
     ctrlWrapper(logoutUserController)
 );
-router.post('/refresh', ctrlWrapper(refreshUserSessionController));
-export default router;
+authRouter.post('/refresh', ctrlWrapper(refreshUserSessionController));
+
+export default authRouter;

@@ -12,6 +12,7 @@ export const registerUserController = async (req, res) => {
 };
 // loginUserController виконує процес обробки запиту на вхід користувача і взаємодію з клієнтом через HTTP
 export const loginUserController = async (req, res) => {
+    // const { _id, accessToken, refreshToken, refreshTokenValidUntil } = await authServices.login(req.body);
     const session = await loginUser(req.body);
     res.cookie('refreshToken', session.refreshToken, {
         httpOnly: true,

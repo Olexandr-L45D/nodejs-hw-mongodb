@@ -1,8 +1,9 @@
 
 import { model, Schema } from 'mongoose';
-
+import { handleSaveError, setUpdateSettings } from "./hooks.js";
+// імпортую раніше створені хуки
 const Session = new Schema({
-    userId: { type: Schema.Types.ObjectId, ref: 'users' },
+    userId: { type: Schema.Types.ObjectId, ref: 'users', required: true, },
     // Id юзера, якому належить сесія
     accessToken: { type: String, required: true },
     // accessToken - короткоживучий(в нашому випадку 15 хвилин) токен, який браузер буде нам додавати в хедери запитів (хедер Authorization)
@@ -15,4 +16,11 @@ const Session = new Schema({
 },
     { timestamps: true, versionKey: false },
 );
+// використовую хуки на схемі сесії
+Session.post("save", handleSaveError);
+
+Session.pre("findOneAndUpdate", setUpdateSettings);
+
+Session.post("findOneAndUpdate", handleSaveError);
+
 export const SessionsCollection = model('sessions', Session);

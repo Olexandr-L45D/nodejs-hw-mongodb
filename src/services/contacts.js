@@ -1,6 +1,6 @@
 //
 import { SORT_ORDER } from '../constants/index.js';
-import { ContactsCollection } from '../db/ContactsCollection.js';
+import { ContactsCollection } from '../db/models/ContactsCollection.js';
 import { calculatePaginationData } from '../utils/calculatePaginationData.js';
 // сервісні функції з коллекції на сервері роблять обробку різними методами по потребі(find, findById, create, findOneAndDelete, findOneAndUpdate)
 export const getAllContacts = async (
