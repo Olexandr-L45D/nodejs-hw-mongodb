@@ -1,6 +1,6 @@
 // new model to BD for User on auth
 import { model, Schema } from 'mongoose';
-import emailRegexp from '../constants/user.js';
+import { emailRegexp } from '../../constants/user.js';
 import { handleSaveError, setUpdateSettings } from "./hooks.js";
 const User = new Schema(
     {
