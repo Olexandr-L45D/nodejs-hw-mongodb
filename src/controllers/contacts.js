@@ -24,18 +24,6 @@ export const contactAllControl = async (req, res) => {
     });
 };
 
-export const deleteContactControl = async (req, res, next) => {
-    const { contactId } = req.params;
-    const deletcontact = await deletContactById(contactId);
-    if (!deletcontact) {
-        next(createHttpError(404, 'Contact not found'));
-        return;
-    }
-    res.status(204).send(
-    );
-};
-
-
 export const contactByIdControl = async (req, res, next) => {
     const { contactId } = req.params;
     const contact = await getContactsById(contactId);
@@ -50,6 +38,7 @@ export const contactByIdControl = async (req, res, next) => {
 };
 export const createContactController = async (req, res) => {
     const userId = req.user._id;
+    const { name, phoneNumber, email, isFavourite, contactType } = createContactsSchema(req.body);
     const { error } = createContactsSchema.validate(req.body, {
         abortEarly: false,
     });
@@ -57,7 +46,9 @@ export const createContactController = async (req, res) => {
         throw createHttpError(400, error.message);
     }
 
-    const contact = await createNewContact(req.body);
+    const contact = await createNewContact({
+        name, phoneNumber, email, isFavourite, contactType, userId
+    });
     res.status(201).json({
         status: 201,
         message: 'Successfully created a contact!',
@@ -95,6 +86,20 @@ export const patchContactControl = async (req, res, next) => {
         data: resultPatch.contact,
     });
 };
+
+export const deleteContactControl = async (req, res, next) => {
+    const { contactId } = req.params;
+    const deletcontact = await deletContactById(contactId);
+    if (!deletcontact) {
+        next(createHttpError(404, 'Contact not found'));
+        return;
+    }
+    res.status(204).send(
+    );
+};
+
+
+
 
 // Після цього використаємо контролери у файлі роутів.
 // router.get('/contacts/:contactId', async (req, res, next)

@@ -7,11 +7,12 @@ const User = new Schema(
         name: { type: String, requirerd: true },
         email: { type: String, match: emailRegexp, requirerd: true, unique: true },
         password: { type: String, requirerd: true },
-        // createdAt: { type: Date },
-        // updatedAt: { type: Date },
-
+        role: {
+            type: String,
+            user: 'user',
+        },
     },
-    { timestamps: true, varsionKey: false },
+    { versionKey: false, timestamps: true },
 );
 User.methods.toJSON = function () {
     const obj = this.toObject();
