@@ -36,13 +36,13 @@ export const createNewContact = async (payload) => {
 };
 //  в Mongoose використовується метод:  Model.create(doc) = create(payload) doc — перший аргумент (обов’язковий), який містить дані (об'єкт або масив об'єктів)
 export const deletContactById = async (contactId, userId) => {
-    const contact = await ContactsCollection.findOneAndDelete({ _id: contactId }, { _id: userId });
+    const contact = await ContactsCollection.findOneAndDelete({ _id: contactId, userId: userId });
     return contact;
 };
 // Для видалення документа з колекції в Mongoose використовується метод:  findOneAndDelete(filter, options, callback)
 export const updateContactById = async (contactId, userId, payload, options = {}) => {
     const rawResult = await ContactsCollection.findOneAndUpdate(
-        { _id: contactId }, { _id: userId }, payload,
+        { _id: contactId, userId: userId }, payload,
         {
             new: true,
             includeResultMetadata: true,

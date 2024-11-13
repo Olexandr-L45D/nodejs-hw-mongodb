@@ -7,10 +7,6 @@ const User = new Schema(
         name: { type: String, requirerd: true },
         email: { type: String, match: emailRegexp, requirerd: true, unique: true },
         password: { type: String, requirerd: true },
-        role: {
-            type: String,
-            user: 'user',
-        },
     },
     { versionKey: false, timestamps: true },
 );
