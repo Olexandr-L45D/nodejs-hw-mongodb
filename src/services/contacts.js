@@ -15,6 +15,9 @@ export const getAllContacts = async (
     if (filter.isFavourite !== undefined) {
         contactsQuery.where('isFavourite').equals(filter.isFavourite);
     };
+    if (filter.userId !== undefined) {
+        contactsQuery.where('userId').equals(filter.userId);
+    };
 
     const contactsCount = await ContactsCollection.find().merge(contactsQuery).countDocuments();
     const contacts = await contactsQuery.skip(skip).limit(limit).sort({ [sortBy]: sortOrder }).exec();
@@ -25,8 +28,8 @@ export const getAllContacts = async (
     };
 };
 // getAllContacts повертає - видає весь масив студентів згідно шаблону описаному в studentsSchema за рах методу find(), findById
-export const getContactsById = async (contactId, userId) => {
-    const contact = await ContactsCollection.findById(contactId, userId);
+export const getContactsById = async (contactId) => {
+    const contact = await ContactsCollection.findById(contactId);
     return contact;
 };
 // getContactsById знаходить обєкт одного студента по айді за рах мет findById
@@ -40,7 +43,7 @@ export const deletContactById = async (contactId, userId) => {
     return contact;
 };
 // Для видалення документа з колекції в Mongoose використовується метод:  findOneAndDelete(filter, options, callback)
-export const updateContactById = async (contactId, userId, payload, options = {}) => {
+export const updateContactById = async (contactId, payload, options = {}, userId,) => {
     const rawResult = await ContactsCollection.findOneAndUpdate(
         { _id: contactId, userId: userId }, payload,
         {
@@ -52,8 +55,7 @@ export const updateContactById = async (contactId, userId, payload, options = {}
     if (!rawResult || !rawResult.value) return null;
     return {
         contact: rawResult.value,
-        isNew:
-            Boolean(rawResult?.lastErrorObject?.upserted),
+        isNew: Boolean(rawResult?.lastErrorObject?.upserted),
     };
 };
 

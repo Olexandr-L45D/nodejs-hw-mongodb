@@ -25,7 +25,6 @@ const contactsSchema = new Schema(
             required: true,
             default: 'personal',
         },
-        // userId: {type: String, required: true,},
         userId: { type: Schema.Types.ObjectId, ref: 'users' },
     },
     {
@@ -33,7 +32,7 @@ const contactsSchema = new Schema(
         timestamps: true,
     },
 );
-
+export const sortByList = ["name", "phoneNumber", "email", "isFavourite"];
 contactsSchema.post("save", handleSaveError);
 
 contactsSchema.pre("findOneAndUpdate", setUpdateSettings);

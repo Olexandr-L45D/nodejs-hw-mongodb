@@ -5,30 +5,28 @@ import { FIFTEEN_MINUTES, THERTY_DAY } from "../constants/index.js";
 import { SessionsCollection } from "../db/models/session.js";
 import { UsersCollection } from "../db/models/user.js";
 
+const createSession = () => {
+    const accessToken = randomBytes(30).toString('base64');
+    const refreshToken = randomBytes(30).toString('base64');
+    return {
+        accessToken, refreshToken,
+        accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
+        refreshTokenValidUntil: new Date(Date.now() + THERTY_DAY),
+        // accessTokenValidUntil: Date.now() + FIFTEEN_MINUTES,
+        // refreshTokenValidUntil: Date.now() + THERTY_DAY,
+    };
+};
 
 export const registerUser = async (payload) => {
-    const user = await UsersCollection.findOne({
-        email: payload.email
-    });
+    const { email, password } = payload;
+    const user = await UsersCollection.findOne({ email });
     if (user) throw createHttpError(409, "Email already in use");
-    const encryptedPassword = await bcrypt.hash(payload.password, 10);
+    const encryptedPassword = await bcrypt.hash(password, 10);
     return await UsersCollection.create({
         ...payload,
         password: encryptedPassword,
     });
 };
-
-// export const register = async payload => {
-//     const { email, password } = payload;
-//     const user = await UserCollection.findOne({ email });
-//     if (user) {
-//         throw createHttpError(409, "Email already in use");
-//     }
-
-//     const hashPassword = await bcrypt.hash(password, 10);
-
-//     return UserCollection.create({ ...payload, password: hashPassword });
-// }
 
 export const loginUser = async ({ email, password }) => {
     const user = await UsersCollection.findOne({ email });
@@ -40,15 +38,16 @@ export const loginUser = async ({ email, password }) => {
     }
     // Далі, функція видаляє попередню сесію користувача, якщо така існує, з колекції сесій. Це робиться для уникнення конфліктів з новою сесією.
     await SessionsCollection.deleteOne({ userId: user._id });
-
-    const accessToken = randomBytes(30).toString('base64');
-    const refreshToken = randomBytes(30).toString('base64');
+    const newSession = createSession();
+    // const accessToken = randomBytes(30).toString("base64");
+    // const refreshToken = randomBytes(30).toString("base64");
+    // return SessionsCollection.create({
     return await SessionsCollection.create({
         userId: user._id,
-        accessToken, refreshToken,
-        accessTokenValidUntil: Date.now() + FIFTEEN_MINUTES,
-        // accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
-        refreshTokenValidUntil: Date.now() + THERTY_DAY,
+        ...newSession,
+        // accessToken, refreshToken,
+        // accessTokenValidUntil: Date.now() + FIFTEEN_MINUTES,
+        // refreshTokenValidUntil: Date.now() + THERTY_DAY,
     });
 };
 
@@ -59,15 +58,17 @@ export const logoutUser = async (sessionId) => {
         _id: sessionId
     });
 };
-const createSession = () => {
-    const accessToken = randomBytes(30).toString('base64');
-    const refreshToken = randomBytes(30).toString('base64');
-    return {
-        accessToken, refreshToken,
-        accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
-        refreshTokenValidUntil: new Date(Date.now() + THERTY_DAY),
-    };
-};
+// export const logoutUser = sessionId => SessionCollection.deleteOne({ _id: sessionId });
+
+// const createSession = () => {
+//     const accessToken = randomBytes(30).toString('base64');
+//     const refreshToken = randomBytes(30).toString('base64');
+//     return {
+//         accessToken, refreshToken,
+//         accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
+//         refreshTokenValidUntil: new Date(Date.now() + THERTY_DAY),
+//     };
+// };
 // refreshUsersSession виконує процес оновлення сесії користувача і взаємодію з базою даних через асинхронні запити.
 export const refreshUsersSession = async ({
     sessionId, refreshToken
@@ -85,15 +86,18 @@ export const refreshUsersSession = async ({
     if (isSessionTokenExpired) {
         throw createHttpError(401, 'Session token expired');
     }
+    await SessionsCollection.deleteOne({ _id: session._id });
+    // await SessionsCollection.deleteOne({ _id: sessionId, refreshToken });
     const newSession = createSession();
-    await SessionsCollection.deleteOne({
-        _id: sessionId, refreshToken
-    });
     return await SessionsCollection.create({
         userId: session.userId,
         ...newSession,
     });
 };
+
+
+
+
 
 // "name": "Anna Solo",
 //     "email": "AnnaSl@gmail.com",

@@ -7,11 +7,14 @@ import { createContactsSchema } from '../validation/contacts.js';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parsFilterParams } from '../utils/parseFilterParams.js';
+import { sortByList } from '../db/models/ContactsCollection.js';
 
 export const contactAllControl = async (req, res) => {
     const { page, perPage } = parsePaginationParams(req.query);
-    const { sortBy, sortOrder } = parseSortParams(req.query);
+    const { sortBy, sortOrder } = parseSortParams(req.query, sortByList);
     const filter = parsFilterParams(req.query);
+    const { _id: userId } = req.user;
+    filter.userId = userId;
     const contacts = await getAllContacts({
         page, perPage,
         sortBy, sortOrder,
@@ -55,6 +58,18 @@ export const createContactController = async (req, res) => {
         data: { contact, userId }
     });
 };
+
+// export const addMovieController = async (req, res) => {
+//     const { _id: userId } = req.user;
+//     const data = await movieServices.addMovie({ ...req.body, userId });
+
+//     res.status(201).json({
+//         status: 201,
+//         message: "Movie successfullt added",
+//         data,
+//     });
+// }
+
 // щоб функція updateContactById могла не тільки оновлювати, але й створювати ресурс при його відсутності, необхідно їй аргументом додатково передати { upsert: true }.
 export const upsertContactControl = async (req, res, next) => {
     const { contactId } = req.params;
