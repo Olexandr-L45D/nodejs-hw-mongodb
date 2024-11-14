@@ -1,7 +1,7 @@
 // new model to BD for User on auth
 import { model, Schema } from 'mongoose';
 import { emailRegexp } from '../../constants/user.js';
-import { handleSaveError, setUpdateSettings } from "./hooks.js";
+// import { handleSaveError, setUpdateSettings } from "./hooks.js";
 const User = new Schema(
     {
         name: { type: String, requirerd: true },
@@ -15,11 +15,12 @@ User.methods.toJSON = function () {
     delete obj.password;
     return obj;
 };
-User.post("save", handleSaveError);
 
-User.pre("findOneAndUpdate", setUpdateSettings);
+// User.post("save", handleSaveError);
 
-User.post("findOneAndUpdate", handleSaveError);
+// User.pre("findOneAndUpdate", setUpdateSettings);
+
+// User.post("findOneAndUpdate", handleSaveError);
 
 export const UsersCollection = model('users', User);
 

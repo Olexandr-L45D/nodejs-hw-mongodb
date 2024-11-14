@@ -59,16 +59,6 @@ export const logoutUser = async (sessionId) => {
     });
 };
 // export const logoutUser = sessionId => SessionCollection.deleteOne({ _id: sessionId });
-
-// const createSession = () => {
-//     const accessToken = randomBytes(30).toString('base64');
-//     const refreshToken = randomBytes(30).toString('base64');
-//     return {
-//         accessToken, refreshToken,
-//         accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
-//         refreshTokenValidUntil: new Date(Date.now() + THERTY_DAY),
-//     };
-// };
 // refreshUsersSession виконує процес оновлення сесії користувача і взаємодію з базою даних через асинхронні запити.
 export const refreshUsersSession = async ({
     sessionId, refreshToken

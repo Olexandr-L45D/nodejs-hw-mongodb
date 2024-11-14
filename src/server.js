@@ -5,7 +5,7 @@ import cookieParser from 'cookie-parser';
 import { env } from './utils/env.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
-import { logger } from "./middlewares/logger.js";
+// import { logger } from "./middlewares/logger.js";
 import contactsRout from './routers/contacts.js';
 import authRouter from './routers/auth.js';
 
@@ -20,7 +20,7 @@ export const setupServer = async () => {
     }));
     app.use(cors());
     app.use(cookieParser());
-    app.use(logger);
+    // app.use(logger);
     app.get('/', async (req, res) => { res.status(200).json({ message: "Hello User!", }); });
     app.use("/auth", authRouter);
     app.use("/contacts", contactsRout); // Додаємо роутер з запитами на: (get, post, put, patch, delete )
