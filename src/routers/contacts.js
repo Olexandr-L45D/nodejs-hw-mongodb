@@ -22,4 +22,27 @@ router.patch('/:contactId', isValidId, validateBody(updateContactsSchema), ctrlW
 export default router;
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // прибираю ендпоінт (/contacts) щоб не повторювати і додаю при виклику на сервері першим аргументом

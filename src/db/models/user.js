@@ -1,7 +1,6 @@
-// new model to BD for User on auth
 import { model, Schema } from 'mongoose';
 import { emailRegexp } from '../../constants/user.js';
-// import { handleSaveError, setUpdateSettings } from "./hooks.js";
+import { handleSaveError, setUpdateSettings } from "./hooks.js";
 const User = new Schema(
     {
         name: { type: String, requirerd: true },
@@ -16,11 +15,11 @@ User.methods.toJSON = function () {
     return obj;
 };
 
-// User.post("save", handleSaveError);
+User.post("save", handleSaveError);
 
-// User.pre("findOneAndUpdate", setUpdateSettings);
+User.pre("findOneAndUpdate", setUpdateSettings);
 
-// User.post("findOneAndUpdate", handleSaveError);
+User.post("findOneAndUpdate", handleSaveError);
 
 export const UsersCollection = model('users', User);
 
@@ -31,11 +30,3 @@ export const UsersCollection = model('users', User);
 
 
 
-
-
-// import { ROLES } from '../constants/index.js';
-// role: {
-//     type: String,
-//             enum: [ROLES.TEACHER, ROLES.PARENT],
-//             default: ROLES.PARENT,
-//         },

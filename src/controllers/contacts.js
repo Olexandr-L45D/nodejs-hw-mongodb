@@ -3,7 +3,6 @@ import {
     createNewContact, deletContactById, updateContactById
 } from '../services/contacts.js';
 import createHttpError from 'http-errors';
-import { createContactsSchema } from '../validation/contacts.js';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parsFilterParams } from '../utils/parseFilterParams.js';
@@ -39,36 +38,18 @@ export const contactByIdControl = async (req, res, next) => {
         data: contact,
     });
 };
-export const createContactController = async (req, res) => {
-    const userId = req.user._id;
-    const { name, phoneNumber, email, isFavourite, contactType } = createContactsSchema(req.body);
-    const { error } = createContactsSchema.validate(req.body, {
-        abortEarly: false,
-    });
-    if (error) {
-        throw createHttpError(400, error.message);
-    }
 
-    const contact = await createNewContact({
-        name, phoneNumber, email, isFavourite, contactType, userId
-    });
+export const createContactController = async (req, res) => {
+
+    const { _id: userId } = req.user;
+
+    const contact = await createNewContact({ ...req.body, userId });
     res.status(201).json({
         status: 201,
         message: 'Successfully created a contact!',
-        data: { contact, userId }
+        contact,
     });
 };
-
-// export const addMovieController = async (req, res) => {
-//     const { _id: userId } = req.user;
-//     const data = await movieServices.addMovie({ ...req.body, userId });
-
-//     res.status(201).json({
-//         status: 201,
-//         message: "Movie successfullt added",
-//         data,
-//     });
-// }
 
 // щоб функція updateContactById могла не тільки оновлювати, але й створювати ресурс при його відсутності, необхідно їй аргументом додатково передати { upsert: true }.
 export const upsertContactControl = async (req, res, next) => {
@@ -115,6 +96,3 @@ export const deleteContactControl = async (req, res, next) => {
 
 
 
-
-// Після цього використаємо контролери у файлі роутів.
-// router.get('/contacts/:contactId', async (req, res, next)

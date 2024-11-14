@@ -32,11 +32,7 @@ export const getContactsById = async (contactId, userId) => {
     const contact = await ContactsCollection.findOne({ _id: contactId, userId: userId });
     return contact;
 };
-// getContactsById знаходить обєкт одного студента по айді за рах мет findById
-// export const createNewContact = async (payload) => {
-//     const contact = await ContactsCollection.create(payload);
-//     return contact;
-// };
+
 export const createNewContact = payload => ContactsCollection.create(payload);
 //  в Mongoose використовується метод:  Model.create(doc) = create(payload) doc — перший аргумент (обов’язковий), який містить дані (об'єкт або масив об'єктів)
 export const deletContactById = async (contactId, userId) => {

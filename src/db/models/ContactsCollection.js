@@ -1,6 +1,6 @@
 import { model, Schema } from 'mongoose';
 import { typeList } from '../../constants/contacts.js';
-// import { handleSaveError, setUpdateSettings } from "./hooks.js";
+import { handleSaveError, setUpdateSettings } from "./hooks.js";
 
 const contactsSchema = new Schema(
     {
@@ -40,13 +40,21 @@ contactsSchema.post('save', (error, data, next) => {
 
 });
 
-// contactsSchema.post("save", handleSaveError);
+contactsSchema.post("save", handleSaveError);
 
-// contactsSchema.pre("findOneAndUpdate", setUpdateSettings);
+contactsSchema.pre("findOneAndUpdate", setUpdateSettings);
 
-// contactsSchema.post("findOneAndUpdate", handleSaveError);
+contactsSchema.post("findOneAndUpdate", handleSaveError);
 
 export const ContactsCollection = model('contacts', contactsSchema);
+
+
+
+
+
+
+
+
 
 
 
@@ -56,5 +64,4 @@ export const ContactsCollection = model('contacts', contactsSchema);
 //     next();
 
 // });
-// timestamps: true при створенні моделі.Це додає до об'єкту два поля:
-// createdAt(дата створення) та updatedAt(дата оновлення), і їх не потрібно додавати вручну.
+// timestamps: true при створенні моделі.Це додає до об'єкту два поля: createdAt(дата створення) та updatedAt(дата оновлення), і їх не потрібно додавати вручну.

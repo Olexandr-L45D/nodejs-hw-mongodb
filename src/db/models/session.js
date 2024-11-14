@@ -1,7 +1,7 @@
 
 import { model, Schema } from 'mongoose';
-// import { handleSaveError, setUpdateSettings } from "./hooks.js";
-// імпортую раніше створені хуки
+import { handleSaveError, setUpdateSettings } from "./hooks.js";
+
 const Session = new Schema({
     userId: { type: Schema.Types.ObjectId, ref: 'users', required: true, },
     // Id юзера, якому належить сесія
@@ -18,10 +18,10 @@ const Session = new Schema({
 );
 // використовую хуки на схемі сесії
 
-// Session.post("save", handleSaveError);
+Session.post("save", handleSaveError);
 
-// Session.pre("findOneAndUpdate", setUpdateSettings);
+Session.pre("findOneAndUpdate", setUpdateSettings);
 
-// Session.post("findOneAndUpdate", handleSaveError);
+Session.post("findOneAndUpdate", handleSaveError);
 
 export const SessionsCollection = model('sessions', Session);

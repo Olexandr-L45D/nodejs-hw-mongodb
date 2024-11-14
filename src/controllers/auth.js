@@ -12,11 +12,9 @@ export const registerUserController = async (req, res) => {
 };
 // loginUserController виконує процес обробки запиту на вхід користувача і взаємодію з клієнтом через HTTP
 export const loginUserController = async (req, res) => {
-    // const { _id, accessToken, refreshToken, refreshTokenValidUntil } = await loginUser(req.body);
     const session = await loginUser(req.body);
     res.cookie('refreshToken', session.refreshToken, {
         httpOnly: true,
-        // http-only cookie, що означає, що він доступний тільки через HTTP-запити і не може бути доступним через JavaScript на стороні клієнта
         expires: new Date(Date.now() + THERTY_DAY),
     });
     res.cookie('sessionId', session._id, {
