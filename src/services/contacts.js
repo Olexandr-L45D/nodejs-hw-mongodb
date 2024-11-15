@@ -28,21 +28,15 @@ export const getAllContacts = async (
     };
 };
 // getAllContacts повертає - видає весь масив студентів згідно шаблону описаному в studentsSchema за рах методу find(), findById
-export const getContactsById = async (contactId, userId) => {
-    const contact = await ContactsCollection.findOne({ _id: contactId, userId: userId });
-    return contact;
-};
-
 export const createNewContact = payload => ContactsCollection.create(payload);
-//  в Mongoose використовується метод:  Model.create(doc) = create(payload) doc — перший аргумент (обов’язковий), який містить дані (об'єкт або масив об'єктів)
-export const deletContactById = async (contactId, userId) => {
-    const contact = await ContactsCollection.findOneAndDelete({ _id: contactId, userId: userId });
-    return contact;
-};
+
+export const getContactsById = id => ContactsCollection.findById(id);
+
+export const deletContactById = filter => ContactsCollection.findOneAndDelete(filter);
 // Для видалення документа з колекції в Mongoose використовується метод:  findOneAndDelete(filter, options, callback)
-export const updateContactById = async (contactId, payload, options = {}, userId,) => {
+export const updateContactById = async (contactId, payload, options = {}) => {
     const rawResult = await ContactsCollection.findOneAndUpdate(
-        { _id: contactId, userId: userId }, payload,
+        { _id: contactId }, payload,
         {
             new: true,
             includeResultMetadata: true,
@@ -55,6 +49,35 @@ export const updateContactById = async (contactId, payload, options = {}, userId
         isNew: Boolean(rawResult?.lastErrorObject?.upserted),
     };
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
