@@ -30,13 +30,20 @@ export const getAllContacts = async (
 // getAllContacts повертає - видає весь масив студентів згідно шаблону описаному в studentsSchema за рах методу find(), findById
 export const createNewContact = payload => ContactsCollection.create(payload);
 
-export const getContactsById = id => ContactsCollection.findById(id);
+export const getContactsById = async (contactId, userId) => {
+    const contact = await ContactsCollection.findOne({ _id: contactId, userId: userId });
+    return contact;
+};
 
-export const deletContactById = filter => ContactsCollection.findOneAndDelete(filter);
+export const deletContactById = async (contactId, userId) => {
+    const contact = await ContactsCollection.findOneAndDelete({ _id: contactId, userId: userId });
+    return contact;
+};
+
 // Для видалення документа з колекції в Mongoose використовується метод:  findOneAndDelete(filter, options, callback)
-export const updateContactById = async (contactId, payload, options = {}) => {
+export const updateContactById = async (contactId, userId, payload, options = {}) => {
     const rawResult = await ContactsCollection.findOneAndUpdate(
-        { _id: contactId }, payload,
+        { _id: contactId, userId: userId }, payload,
         {
             new: true,
             includeResultMetadata: true,
@@ -49,7 +56,6 @@ export const updateContactById = async (contactId, payload, options = {}) => {
         isNew: Boolean(rawResult?.lastErrorObject?.upserted),
     };
 };
-
 
 
 
