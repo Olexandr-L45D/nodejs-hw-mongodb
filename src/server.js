@@ -8,6 +8,7 @@ import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { logger } from "./middlewares/logger.js";
 import contactsRout from './routers/contacts.js';
 import authRouter from './routers/auth.js';
+import { UPLOAD_DIR } from './constants/index.js';
 
 const PORT = Number(env('PORT', '3000'));
 
@@ -23,6 +24,7 @@ export const setupServer = async () => {
     app.get('/', async (req, res) => { res.status(200).json({ message: "Hello User!", }); });
     app.use("/auth", authRouter);  // Додаємо роутер з запитами на: (register,login, logout, refresh )
     app.use("/contacts", contactsRout); // Додаємо роутер з запитами на: (get, post, put, patch, delete )
+    app.use('/uploads', express.static(UPLOAD_DIR));
     app.use(notFoundHandler);
     app.use(errorHandler);
     app.listen(PORT, () => {

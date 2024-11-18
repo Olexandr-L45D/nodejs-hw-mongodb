@@ -6,6 +6,7 @@ const User = new Schema(
         name: { type: String, requirerd: true },
         email: { type: String, match: emailRegexp, requirerd: true, unique: true },
         password: { type: String, requirerd: true },
+        verify: { type: String },
     },
     { versionKey: false, timestamps: true },
 );
@@ -24,7 +25,7 @@ User.post("findOneAndUpdate", handleSaveError);
 export const UsersCollection = model('users', User);
 
 
-
+// треба знайти у Богдана та додати властивості до verify: { type: String },
 
 
 

@@ -121,16 +121,21 @@ export const requestResetToken = async (email) => {
     });
 };
 
+// export const resetPassword = async (payload, { sessionId, refreshToken }) => {
+// const session = await SessionsCollection.findOne({ _id: sessionId, refreshToken, });
+// const isSessionTokenExpired = new Date() > new Date(session.refreshTokenValidUntil);
+// if (isSessionTokenExpired) {
+//     throw createHttpError(401, 'Token is expired or invalid.');
+// }
 export const resetPassword = async (payload) => {
     let entries;
-
     try {
         entries = jwt.verify(payload.token, env('JWT_SECRET'));
-    } catch (err) {
+    }
+    catch (err) {
         if (err instanceof Error) throw createHttpError(401, err.message);
         throw err;
     }
-
     const user = await UsersCollection.findOne({
         email: entries.email,
         _id: entries.sub,
@@ -148,7 +153,6 @@ export const resetPassword = async (payload) => {
     );
 };
 
-
-// SMTP_PASSWORD = xsmtpsib - 2b237ed81d4253bd91cf66cb162760c211eefba83bb6f53d253def9a86bd9a28 - PTgWr5tHJvAfVRSc
+// Для налаштування сховища ми скористаємося методом бібліотеки diskStorage. Налаштування сховища для бібліотеки multer включає два основні параметри: destination і filename.
 
 

@@ -10,6 +10,16 @@ import { createContactsSchema, updateContactsSchema } from '../validation/contac
 import { validateBody } from '../middlewares/validateBody.js';
 import { isValidId } from '../middlewares/isValidId.js';
 import { authenticate } from '../middlewares/authenticate.js';
+import { upload } from '../middlewares/multer.js';
+
+router.post(
+    '/',
+    isValidId,
+    upload.single('photo'), // додаємо цю middleware
+    validateBody(createContactsSchema),
+    ctrlWrapper(createContactController),
+);
+
 
 router.use(authenticate);
 router.get('/', ctrlWrapper(contactAllControl));

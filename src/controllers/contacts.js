@@ -7,6 +7,7 @@ import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parsFilterParams } from '../utils/parseFilterParams.js';
 import { sortByList } from '../db/models/ContactsCollection.js';
+import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
 
 export const contactAllControl = async (req, res) => {
     const { page, perPage } = parsePaginationParams(req.query);
@@ -86,7 +87,14 @@ export const upsertContactControl = async (req, res, next) => {
 export const patchContactControl = async (req, res, next) => {
     const userId = req.user._id;
     const { contactId } = req.params;
-    const resultPatch = await updateContactById(contactId, userId, req.body);
+    const photo = req.file;
+    let photoUrl;
+
+    if (photo) {
+        photoUrl = await saveFileToUploadDir(photo);
+    }
+    // const resultPatch = await updateContactById(contactId, userId, req.body, photo: photoUrl,);
+    const resultPatch = await updateContactById(contactId, userId, { ...req.body, photo: photoUrl });
     if (!resultPatch) {
         next(createHttpError(404, 'Contact not found'));
         return;
@@ -97,6 +105,46 @@ export const patchContactControl = async (req, res, next) => {
         data: resultPatch.contact,
     });
 };
+
+// export const patchStudentController = async (req, res, next) => {
+//     const { studentId } = req.params;
+//     const photo = req.file;
+//     /* в photo лежить обʼєкт файлу
+//         {
+//           fieldname: 'photo',
+//           originalname: 'download.jpeg',
+//           encoding: '7bit',
+//           mimetype: 'image/jpeg',
+//           destination: '/Users/borysmeshkov/Projects/goit-study/students-app/temp',
+//           filename: '1710709919677_download.jpeg',
+//           path: '/Users/borysmeshkov/Projects/goit-study/students-app/temp/1710709919677_download.jpeg',
+//           size: 7
+//       }
+//     */
+//     let photoUrl;
+
+//     if (photo) {
+//         photoUrl = await saveFileToUploadDir(photo);
+//     }
+
+//     const result = await updateStudent(studentId, {
+//         ...req.body,
+//         photo: photoUrl,
+//     });
+
+//     if (!result) {
+//         next(createHttpError(404, 'Student not found'));
+//         return;
+//     }
+
+//     res.json({
+//         status: 200,
+//         message: `Successfully patched a student!`,
+//         data: result.student,
+//     });
+// };
+
+
 
 
 
