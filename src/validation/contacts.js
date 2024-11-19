@@ -17,7 +17,7 @@ export const createContactsSchema = Joi.object({
     email: Joi.string().pattern(emailRegexp).required(),
     isFavourite: Joi.boolean(),
     contactType: Joi.string().valid(...typeList).required(),
-
+    photo: Joi.string(),
 });
 
 export const updateContactsSchema = Joi.object({
@@ -38,5 +38,5 @@ export const updateContactsSchema = Joi.object({
 
 });
 
-// ?page=1&perPage=10&sortBy=phoneNumber&sortOrder=asc
+//синтаксис запису для пагінації та сортування ?page=1&perPage=10&sortBy=phoneNumber&sortOrder=asc
 

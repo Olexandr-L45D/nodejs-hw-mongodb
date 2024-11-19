@@ -3,11 +3,13 @@ import {
     createNewContact, deletContactById, updateContactById
 } from '../services/contacts.js';
 import createHttpError from 'http-errors';
+import { sortByList } from '../db/models/ContactsCollection.js';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parsFilterParams } from '../utils/parseFilterParams.js';
-import { sortByList } from '../db/models/ContactsCollection.js';
 import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
+import { env } from '../utils/env.js';
+import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 
 export const contactAllControl = async (req, res) => {
     const { page, perPage } = parsePaginationParams(req.query);
@@ -64,7 +66,6 @@ export const deleteContactControl = async (req, res, next) => {
     res.status(204).send(
     );
 };
-
 // щоб функція updateContactById могла не тільки оновлювати, але й створювати ресурс при його відсутності, необхідно їй аргументом додатково передати { upsert: true }.
 export const upsertContactControl = async (req, res, next) => {
     const userId = req.user._id;
@@ -91,7 +92,12 @@ export const patchContactControl = async (req, res, next) => {
     let photoUrl;
 
     if (photo) {
-        photoUrl = await saveFileToUploadDir(photo);
+        if (env('ENABLE_CLOUDINARY') === 'true') {
+            // Feature flag -(env('ENABLE_CLOUDINARY') === 'true') (тобто активний!) - (флаг функції або функціональний флаг)
+            photoUrl = await saveFileToCloudinary(photo);
+        } else {
+            photoUrl = await saveFileToUploadDir(photo);
+        }
     }
     // const resultPatch = await updateContactById(contactId, userId, req.body, photo: photoUrl,);
     const resultPatch = await updateContactById(contactId, userId, { ...req.body, photo: photoUrl });
@@ -106,8 +112,9 @@ export const patchContactControl = async (req, res, next) => {
     });
 };
 
-// export const patchStudentController = async (req, res, next) => {
-//     const { studentId } = req.params;
+// Feature flag (флаг функції або функціональний флаг) який дозволяє ввімкнути або вимкнути певні функції або частини функціоналу програми за допомогою змінних конфігурації. Цей підхід дозволяє розробникам впроваджувати нові функції або змінювати
+// Якщо змінна середовища ENABLE_CLOUDINARY встановлена в true, фото завантажується на Cloudinary, інакше — у локальну директорію.
+// export const patchContactControl = async (req, res, next) => {
 //     const photo = req.file;
 //     /* в photo лежить обʼєкт файлу
 //         {
@@ -121,28 +128,6 @@ export const patchContactControl = async (req, res, next) => {
 //           size: 7
 //       }
 //     */
-//     let photoUrl;
-
-//     if (photo) {
-//         photoUrl = await saveFileToUploadDir(photo);
-//     }
-
-//     const result = await updateStudent(studentId, {
-//         ...req.body,
-//         photo: photoUrl,
-//     });
-
-//     if (!result) {
-//         next(createHttpError(404, 'Student not found'));
-//         return;
-//     }
-
-//     res.json({
-//         status: 200,
-//         message: `Successfully patched a student!`,
-//         data: result.student,
-//     });
-// };
 
 
 

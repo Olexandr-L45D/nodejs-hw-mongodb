@@ -1,6 +1,6 @@
 
 import { THERTY_DAY } from "../constants/index.js";
-import { registerUser, loginUser, logoutUser, refreshUsersSession, requestResetToken, resetPassword } from "../services/auth.js";
+import { registerUser, loginUser, logoutUser, refreshUsersSession, requestResetToken, resetPassword, verifyUser } from "../services/auth.js";
 
 export const registerUserController = async (req, res) => {
     const user = await registerUser(req.body);
@@ -82,5 +82,15 @@ export const resetPasswordController = async (req, res) => {
         message: 'Password was successfully reset!',
         status: 200,
         data: {},
+    });
+};
+
+export const verifyController = async (req, res) => {
+    const { token } = req.query;
+    await verifyUser(token);
+
+    res.json({
+        status: 200,
+        message: "User verify successfully"
     });
 };

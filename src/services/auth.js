@@ -11,6 +11,10 @@ import handlebars from 'handlebars';
 import path from 'node:path';
 import fs from 'node:fs/promises';
 
+// const emailTemplatePath = path.join(TEMPLATES_DIR, "verify-email.html");
+const appDomain = env("APP_DOMAIN");
+const jwtSecret = env("JWT_SECRET");
+
 const createSession = () => {
     const accessToken = randomBytes(30).toString('base64');
     const refreshToken = randomBytes(30).toString('base64');
@@ -18,10 +22,10 @@ const createSession = () => {
         accessToken, refreshToken,
         accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
         refreshTokenValidUntil: new Date(Date.now() + THERTY_DAY),
-        // accessTokenValidUntil: Date.now() + FIFTEEN_MINUTES,
-        // refreshTokenValidUntil: Date.now() + THERTY_DAY,
     };
 };
+
+export const findUser = filter => UsersCollection.findOne(filter);
 
 export const registerUser = async (payload) => {
     const { email, password } = payload;
@@ -45,27 +49,18 @@ export const loginUser = async ({ email, password }) => {
     // Далі, функція видаляє попередню сесію користувача, якщо така існує, з колекції сесій. Це робиться для уникнення конфліктів з новою сесією.
     await SessionsCollection.deleteOne({ userId: user._id });
     const newSession = createSession();
-    // const accessToken = randomBytes(30).toString("base64");
-    // const refreshToken = randomBytes(30).toString("base64");
-    // return SessionsCollection.create({
     return await SessionsCollection.create({
         userId: user._id,
         ...newSession,
-        // accessToken, refreshToken,
-        // accessTokenValidUntil: Date.now() + FIFTEEN_MINUTES,
-        // refreshTokenValidUntil: Date.now() + THERTY_DAY,
     });
 };
-
-// Нарешті після перевірок функція loginUser створює нову сесію в базі даних. Нова сесія включає ідентифікатор користувача,
-// згенеровані токени доступу та оновлення: accessToken, refreshToken, а також часові межі їхньої дії.Токен доступу має обмежений термін дії(наприклад, 15 хвилин), тоді як токен для оновлення діє довше(наприклад, один день).
+// Нарешті після перевірок функція loginUser створює нову сесію в базі даних. Нова сесія включає ідентифікатор користувача,// згенеровані токени доступу та оновлення: accessToken, refreshToken, а також часові межі їхньої дії.Токен доступу має обмежений термін дії(наприклад, 15 хвилин), тоді як токен для оновлення діє довше(наприклад, один день).
 export const logoutUser = async (sessionId) => {
     await SessionsCollection.deleteOne({
         _id: sessionId
     });
 };
-// export const logoutUser = sessionId => SessionCollection.deleteOne({ _id: sessionId });
-// refreshUsersSession виконує процес оновлення сесії користувача і взаємодію з базою даних через асинхронні запити.
+// export const logoutUser = sessionId => SessionCollection.deleteOne({ _id: sessionId }), refreshUsersSession виконує процес оновлення сесії користувача і взаємодію з базою даних через асинхронні запити.
 export const refreshUsersSession = async ({
     sessionId, refreshToken
 }) => {
@@ -103,15 +98,22 @@ export const requestResetToken = async (email) => {
         },
         env('JWT_SECRET'),
         {
-            expiresIn: '5m',
+            expiresIn: "1h",
         },
     );
     const resetPasswordTemplatePath = path.join(TEMPLATES_DIR, 'reset-password-email.html');
-    const templateSource = ((await fs.readFile(resetPasswordTemplatePath)).toString());
+    // const templateSource = ((await fs.readFile(resetPasswordTemplatePath)).toString());
+    const templateSource = await fs.readFile(resetPasswordTemplatePath, "utf-8");
     const template = handlebars.compile(templateSource);
+    // const token = jwt.sign({ email }, jwtSecret, { expiresIn: "24h" });
+    // const html = template({
+    //     link: `${appDomain}/auth/verify?token=${token}`
+    // });
+
     const html = template({
         name: user.name,
-        link: `${env('APP_DOMAIN')}/reset-password? token=${resetToken}`
+        link: `${appDomain}/auth/reset-password?token=${resetToken}`
+        // link: `${env('APP_DOMAIN')}/reset-password? token=${resetToken}`
     });
     await sendEmail({
         from: env(SMTP.SMTP_FROM),
@@ -121,12 +123,6 @@ export const requestResetToken = async (email) => {
     });
 };
 
-// export const resetPassword = async (payload, { sessionId, refreshToken }) => {
-// const session = await SessionsCollection.findOne({ _id: sessionId, refreshToken, });
-// const isSessionTokenExpired = new Date() > new Date(session.refreshTokenValidUntil);
-// if (isSessionTokenExpired) {
-//     throw createHttpError(401, 'Token is expired or invalid.');
-// }
 export const resetPassword = async (payload) => {
     let entries;
     try {
@@ -151,6 +147,20 @@ export const resetPassword = async (payload) => {
         { _id: user._id },
         { password: encryptedPassword },
     );
+};
+
+export const verifyUser = async token => {
+    try {
+        const { email } = jwt.verify(token, jwtSecret);
+        const user = await findUser({ email });
+        if (!user) {
+            throw createHttpError(404, `${email} not found`);
+        }
+        return await UsersCollection.findByIdAndUpdate(user._id, { verify: true });
+    }
+    catch (error) {
+        throw createHttpError(401, error.message);
+    }
 };
 
 // Для налаштування сховища ми скористаємося методом бібліотеки diskStorage. Налаштування сховища для бібліотеки multer включає два основні параметри: destination і filename.
