@@ -32,8 +32,16 @@ export const contactAllControl = async (req, res) => {
 export const createContactController = async (req, res) => {
 
     const { _id: userId } = req.user;
+    const photo = req.file;
+    let photoUrl;
 
-    const contact = await createNewContact({ ...req.body, userId });
+    if (photo) {
+        photoUrl = await saveFileToCloudinary(photo);
+    } else {
+        photoUrl = await saveFileToUploadDir(photo);
+    }
+
+    const contact = await createNewContact({ ...req.body, userId, photo: photoUrl });
     res.status(201).json({
         status: 201,
         message: 'Successfully created a contact!',
@@ -70,7 +78,15 @@ export const deleteContactControl = async (req, res, next) => {
 export const upsertContactControl = async (req, res, next) => {
     const userId = req.user._id;
     const { contactId } = req.params;
-    const resultUpdate = await updateContactById(contactId, userId, req.body, {
+    const photo = req.file;
+    let photoUrl;
+
+    if (photo) {
+        photoUrl = await saveFileToCloudinary(photo);
+    } else {
+        photoUrl = await saveFileToUploadDir(photo);
+    }
+    const resultUpdate = await updateContactById(contactId, userId, { ...req.body, photo: photoUrl }, {
         upsert: true,
     });
     if (!resultUpdate) {
@@ -90,21 +106,12 @@ export const patchContactControl = async (req, res, next) => {
     const { contactId } = req.params;
     const photo = req.file;
     let photoUrl;
-    // photoUrl = await saveFileToUploadDir(photo); defaultValue
-    // if (photo) {
-    //     if (env('ENABLE_CLOUDINARY') === 'true')
-    //     {
-    //         photoUrl = await saveFileToCloudinary(photo);
-    //     } else {
-    //         photoUrl = await saveFileToUploadDir(photo);
-    //     }
-    // }
+
     if (photo) {
         photoUrl = await saveFileToCloudinary(photo);
     } else {
         photoUrl = await saveFileToUploadDir(photo);
     }
-
 
     const resultPatch = await updateContactById(contactId, userId, { ...req.body, photo: photoUrl });
     if (!resultPatch) {
@@ -118,6 +125,16 @@ export const patchContactControl = async (req, res, next) => {
     });
 };
 
+
+// photoUrl = await saveFileToUploadDir(photo); defaultValue
+// if (photo) {
+//     if (env('ENABLE_CLOUDINARY') === 'true')
+//     {
+//         photoUrl = await saveFileToCloudinary(photo);
+//     } else {
+//         photoUrl = await saveFileToUploadDir(photo);
+//     }
+// }
 // Feature flag -(env('ENABLE_CLOUDINARY') === 'true') (тобто активний!) - (флаг функції або функціональний флаг)
 
 
