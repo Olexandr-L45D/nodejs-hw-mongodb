@@ -24,6 +24,7 @@ export const setupServer = async () => {
     app.get('/', async (req, res) => { res.status(200).json({ message: "Hello User!", }); });
     app.use("/auth", authRouter);
     app.use("/contacts", contactsRout);
+
     app.use('/uploads', express.static(UPLOAD_DIR));
     app.use(notFoundHandler);
     app.use(errorHandler);
