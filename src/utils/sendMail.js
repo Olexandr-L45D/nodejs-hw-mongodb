@@ -16,10 +16,3 @@ export const sendEmail = async (options) => {
     return await transporter.sendMail(options);
 };
 
-
-// "name": "Olena Li",
-//     "phoneNumber": "11122235",
-//         "email": "Olena1_Li@gmail.com",
-//             "isFavourite": false,
-//                 "contactType": "personal",
-// 6738c6ef4fc762147c2ab4a0

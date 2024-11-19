@@ -93,7 +93,6 @@ export const patchContactControl = async (req, res, next) => {
 
     if (photo) {
         if (env('ENABLE_CLOUDINARY') === 'true') {
-            // Feature flag -(env('ENABLE_CLOUDINARY') === 'true') (тобто активний!) - (флаг функції або функціональний флаг)
             photoUrl = await saveFileToCloudinary(photo);
         } else {
             photoUrl = await saveFileToUploadDir(photo);
@@ -112,25 +111,7 @@ export const patchContactControl = async (req, res, next) => {
     });
 };
 
-// Feature flag (флаг функції або функціональний флаг) який дозволяє ввімкнути або вимкнути певні функції або частини функціоналу програми за допомогою змінних конфігурації. Цей підхід дозволяє розробникам впроваджувати нові функції або змінювати
-// Якщо змінна середовища ENABLE_CLOUDINARY встановлена в true, фото завантажується на Cloudinary, інакше — у локальну директорію.
-// export const patchContactControl = async (req, res, next) => {
-//     const photo = req.file;
-//     /* в photo лежить обʼєкт файлу
-//         {
-//           fieldname: 'photo',
-//           originalname: 'download.jpeg',
-//           encoding: '7bit',
-//           mimetype: 'image/jpeg',
-//           destination: '/Users/borysmeshkov/Projects/goit-study/students-app/temp',
-//           filename: '1710709919677_download.jpeg',
-//           path: '/Users/borysmeshkov/Projects/goit-study/students-app/temp/1710709919677_download.jpeg',
-//           size: 7
-//       }
-//     */
-
-
-
+// Feature flag -(env('ENABLE_CLOUDINARY') === 'true') (тобто активний!) - (флаг функції або функціональний флаг)
 
 
 

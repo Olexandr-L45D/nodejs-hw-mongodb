@@ -1,4 +1,4 @@
-// parseSortParams.js
+
 // parseSortOrder = (sortOrder) - парсинг методу сортування (зростання чи спадання)
 // parseSortBy = (sortBy) - парсинг за значенням (імя чи інший параметр)
 import { SORT_ORDER } from "../constants/index.js";

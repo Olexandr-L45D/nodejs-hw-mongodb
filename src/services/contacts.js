@@ -1,8 +1,8 @@
-//
+
 import { SORT_ORDER } from '../constants/index.js';
 import { ContactsCollection } from '../db/models/ContactsCollection.js';
 import { calculatePaginationData } from '../utils/calculatePaginationData.js';
-// сервісні функції з коллекції на сервері роблять обробку різними методами по потребі(find, findById, create, findOneAndDelete, findOneAndUpdate)
+
 export const getAllContacts = async (
     { page = 1, perPage = 4, sortOrder = SORT_ORDER.ASC, sortBy = '_id', filter = {}, }) => {
     const limit = perPage;

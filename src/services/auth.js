@@ -11,7 +11,6 @@ import handlebars from 'handlebars';
 import path from 'node:path';
 import fs from 'node:fs/promises';
 
-// const emailTemplatePath = path.join(TEMPLATES_DIR, "verify-email.html");
 const appDomain = env("APP_DOMAIN");
 const jwtSecret = env("JWT_SECRET");
 
@@ -102,18 +101,14 @@ export const requestResetToken = async (email) => {
         },
     );
     const resetPasswordTemplatePath = path.join(TEMPLATES_DIR, 'reset-password-email.html');
-    // const templateSource = ((await fs.readFile(resetPasswordTemplatePath)).toString());
     const templateSource = await fs.readFile(resetPasswordTemplatePath, "utf-8");
     const template = handlebars.compile(templateSource);
     // const token = jwt.sign({ email }, jwtSecret, { expiresIn: "24h" });
-    // const html = template({
-    //     link: `${appDomain}/auth/verify?token=${token}`
-    // });
 
     const html = template({
         name: user.name,
         link: `${appDomain}/auth/reset-password?token=${resetToken}`
-        // link: `${env('APP_DOMAIN')}/reset-password? token=${resetToken}`
+        //     link: `${appDomain}/auth/verify?token=${token}`
     });
     await sendEmail({
         from: env(SMTP.SMTP_FROM),

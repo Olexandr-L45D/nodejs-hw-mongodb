@@ -22,8 +22,8 @@ export const setupServer = async () => {
     app.use(cookieParser());
     app.use(logger);
     app.get('/', async (req, res) => { res.status(200).json({ message: "Hello User!", }); });
-    app.use("/auth", authRouter);  // Додаємо роутер з запитами на: (register,login, logout, refresh )
-    app.use("/contacts", contactsRout); // Додаємо роутер з запитами на: (get, post, put, patch, delete )
+    app.use("/auth", authRouter);
+    app.use("/contacts", contactsRout);
     app.use('/uploads', express.static(UPLOAD_DIR));
     app.use(notFoundHandler);
     app.use(errorHandler);
