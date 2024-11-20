@@ -15,7 +15,7 @@ import { upload } from '../middlewares/multer.js';
 router.use(authenticate);
 router.get('/', ctrlWrapper(contactAllControl));
 router.get('/:contactId', isValidId, ctrlWrapper(contactByIdControl));
-router.post('/', isValidId, upload.single('photo'), validateBody(createContactsSchema), ctrlWrapper(createContactController));
+router.post('/', upload.single('photo'), validateBody(createContactsSchema), ctrlWrapper(createContactController));
 router.put('/:contactId', isValidId, upload.single('photo'), validateBody(updateContactsSchema), ctrlWrapper(upsertContactControl));
 router.patch('/:contactId', isValidId, upload.single('photo'), validateBody(updateContactsSchema), ctrlWrapper(patchContactControl));
 router.delete('/:contactId', isValidId, ctrlWrapper(deleteContactControl));

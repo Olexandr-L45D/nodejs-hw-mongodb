@@ -8,7 +8,7 @@ import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parsFilterParams } from '../utils/parseFilterParams.js';
 import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
-// import { env } from '../utils/env.js';
+import { env } from '../utils/env.js';
 import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 
 export const contactAllControl = async (req, res) => {
@@ -36,9 +36,11 @@ export const createContactController = async (req, res) => {
     let photoUrl;
 
     if (photo) {
-        photoUrl = await saveFileToCloudinary(photo);
-    } else {
-        photoUrl = await saveFileToUploadDir(photo);
+        if (env('ENABLE_CLOUDINARY') === 'true') {
+            photoUrl = await saveFileToCloudinary(photo);
+        } else {
+            photoUrl = await saveFileToUploadDir(photo);
+        }
     }
 
     const contact = await createNewContact({ ...req.body, userId, photo: photoUrl });
@@ -82,9 +84,11 @@ export const upsertContactControl = async (req, res, next) => {
     let photoUrl;
 
     if (photo) {
-        photoUrl = await saveFileToCloudinary(photo);
-    } else {
-        photoUrl = await saveFileToUploadDir(photo);
+        if (env('ENABLE_CLOUDINARY') === 'true') {
+            photoUrl = await saveFileToCloudinary(photo);
+        } else {
+            photoUrl = await saveFileToUploadDir(photo);
+        }
     }
     const resultUpdate = await updateContactById(contactId, userId, { ...req.body, photo: photoUrl }, {
         upsert: true,
@@ -108,9 +112,11 @@ export const patchContactControl = async (req, res, next) => {
     let photoUrl;
 
     if (photo) {
-        photoUrl = await saveFileToCloudinary(photo);
-    } else {
-        photoUrl = await saveFileToUploadDir(photo);
+        if (env('ENABLE_CLOUDINARY') === 'true') {
+            photoUrl = await saveFileToCloudinary(photo);
+        } else {
+            photoUrl = await saveFileToUploadDir(photo);
+        }
     }
 
     const resultPatch = await updateContactById(contactId, userId, { ...req.body, photo: photoUrl });
