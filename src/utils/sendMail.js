@@ -16,7 +16,7 @@ export const sendEmail = async (options) => {
     try {
         return await transporter.sendMail(options);
     } catch (error) {
-        console.error("Failed to send the email", error.messeg);
+        console.error("Failed to send the email", error.message);
         throw createHttpError(500, 'Failed to send the email, please try again later. ');
 
     };

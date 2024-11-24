@@ -1,6 +1,6 @@
 # swagger/components/responses/401.yaml
 # Кожен YAML починається з --- що означає початок файлу YAML.
----
+
 description: Unauthorized error
 content:
   application/json:
