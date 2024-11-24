@@ -21,10 +21,14 @@ servers:
   - url: http://localhost:3000
   - url: https://example.com/api/v1
 paths:
+  #додаємо get  всих контактів
+  /contacts:
+    get:
+      $ref: ../swagger/paths/contacts/get.yaml
   /contacts:
     post:
       $ref: ../swagger/paths/contacts/post.yaml
-#додаємо ще один шлях
+#додаємо get to id
   /contacts/{id}:
     get:
       $ref: ../swagger/paths/contacts/{id}/get.yaml
