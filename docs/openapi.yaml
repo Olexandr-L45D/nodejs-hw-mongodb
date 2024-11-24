@@ -25,7 +25,6 @@ paths:
   /contacts:
     get:
       $ref: ../swagger/paths/contacts/get.yaml
-  /contacts:
     post:
       $ref: ../swagger/paths/contacts/post.yaml
 #додаємо get to id

@@ -8,6 +8,22 @@ operationId: createContact
 description: 'Create a contact with payload'
 security:
   - bearerAuth: []
+parameters:
+  - in: query
+    name: name
+    schema:
+      type: string
+    example: 'name'
+  - in: query
+    name: phoneNumber
+    schema:
+      type: string
+    example: '1112233'
+  - in: query
+    name: email
+    schema:
+      type: string
+    example: 'John_Doe123@gmail.com'
 requestBody:
   content:
     multipart/form-data:
@@ -20,25 +36,25 @@ requestBody:
           - contactType
         properties:
           name:
-    description: "Contact's name"
-    type: string
-    example: 'John Doe'
-  phoneNumber:
-    description: "Contact's name"
-    type: string
-    example: 222-33-11
-  email:
-    description: "Contact's email"
-    type: string
-    example: 'John_Doe123@gmail.com'
-  contactType:
-    description: "Contact's contactType"
-    type: string
-    enum: ['work', 'home', 'personal']
-  photo:
-    description: "Link to contact's photo"
-    type: string
-    example: https://res.cloudinary.com/uqwgdu/image/upload/image.png
+           description: "Contact's name"
+           type: string
+           example: 'John Doe'
+          phoneNumber:
+           description: "phoneNumber"
+           type: string
+           example: 222-33-11
+          email:
+           description: "Contact's email"
+           type: string
+           example: 'John_Doe123@gmail.com'
+          contactType:
+            description: "Contact's contactType"
+            type: string
+            enum: ['work', 'home', 'personal']
+          photo:
+           description: "Link to contact's photo"
+           type: string
+           format: binary
 
 responses:
   '201':
