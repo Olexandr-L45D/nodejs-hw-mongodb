@@ -1,0 +1,79 @@
+# paths/auth/register.yaml
+tags:
+  - Auth
+summary: Register user
+operationId: createUser
+description: 'Create a user with payload'
+security:
+  - bearerAuth: []
+parameters:
+  - in: query
+    name: name
+    schema:
+      type: string
+    example: 'Jonni'
+  - in: query
+    name: email
+    schema:
+      type: string
+    example: 'Jonni_Do1@gmail.com'
+  - in: query
+    name: password
+    schema:
+      type: string
+    example: '111223Jn'
+requestBody:
+  content:
+    application/json:
+      schema:
+        type: object
+        required:
+          - name
+          - email
+          - password
+        properties:
+          name:
+           description: "User's name"
+           type: string
+           example: 'John Doe'
+          email:
+           description: "User's email"
+           type: string
+           example: 'John_Doe123@gmail.com'
+          password:
+           description: "password"
+           type: string
+           example: '111223Jn'
+
+responses:
+  '201':
+    description: Creates a user
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            # status:
+            #  type: integer
+            #  example: 409
+            # message:
+            #  type: string
+            #  example: Email already in use
+            status:
+              type: integer
+              example: 201
+            message:
+              type: string
+              example: Successfully registered a user!
+            data:
+              type: object
+              $ref: '../../components/schemas/user.yaml'
+  '401':
+    $ref: '../../components/responses/401.yaml'
+
+
+

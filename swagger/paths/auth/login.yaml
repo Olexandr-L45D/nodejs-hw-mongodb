@@ -1,0 +1,63 @@
+# paths/auth/login.yaml
+tags:
+  - Auth
+summary: Login a user
+operationId: loginUser
+description: 'Login a user with payload'
+security:
+  - bearerAuth: []
+parameters:
+  - in: query
+    name: email
+    schema:
+      type: string
+    example: 'Jonni_Do1@gmail.com'
+  - in: query
+    name: password
+    schema:
+      type: string
+    example: '111223Jn'
+requestBody:
+  content:
+    application/json:
+      schema:
+        type: object
+        required:
+          - email
+          - password
+        properties:
+          email:
+           description: "User's email"
+           type: string
+           example: 'John_Doe123@gmail.com'
+          password:
+           description: "password"
+           type: string
+           example: '111223Jn'
+responses:
+  '200':
+    description: Login a user
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Successfully login a user!
+            data:
+              type: object
+              $ref: '../../components/schemas/user.yaml'
+  '401':
+    $ref: '../../components/responses/401.yaml'
+
+
+
+

@@ -131,16 +131,6 @@ export const patchContactControl = async (req, res, next) => {
     });
 };
 
-
-// photoUrl = await saveFileToUploadDir(photo); defaultValue
-// if (photo) {
-//     if (env('ENABLE_CLOUDINARY') === 'true')
-//     {
-//         photoUrl = await saveFileToCloudinary(photo);
-//     } else {
-//         photoUrl = await saveFileToUploadDir(photo);
-//     }
-// }
 // Feature flag -(env('ENABLE_CLOUDINARY') === 'true') (тобто активний!) - (флаг функції або функціональний флаг)
 
 

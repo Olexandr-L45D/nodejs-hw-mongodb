@@ -1,0 +1,52 @@
+# paths/auth/logout.yaml
+tags:
+  - Auth
+summary: Logout user
+operationId: logouthUser
+description: 'Logout user'
+security:
+  - bearerAuth: []
+parameters:
+  - in: query
+    name: email
+    schema:
+      type: string
+    example: 'Jonni_Do1@gmail.com'
+requestBody:
+  content:
+    application/json:
+      schema:
+        type: object
+        required:
+          - email
+        properties:
+          email:
+           description: "User's email"
+           type: string
+           example: 'John_Doe123@gmail.com'
+responses:
+  '204':
+    description: Logout user
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 204
+            message:
+              type: string
+              example: Successfully logout user!
+            data:
+              type: object
+              $ref: '../../components/schemas/user.yaml'
+  '401':
+    $ref: '../../components/responses/401.yaml'
+
+
+
