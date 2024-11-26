@@ -1,6 +1,5 @@
-# swagger/components/responses/401.yaml
-
-description: Unauthorized error
+# 404
+description: Not found
 content:
   application/json:
     schema:
@@ -12,10 +11,10 @@ content:
       properties:
         status:
           type: integer
-          example: 401
+          example: 404
         message:
           type: string
-          example: UnauthorizedError
+          example: Not found
         data:
           type: object
           required:
@@ -23,5 +22,4 @@ content:
           properties:
             message:
               type: string
-              example: 'Access token expired'
-
+              example: 'Contact not found'

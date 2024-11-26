@@ -1,6 +1,6 @@
-# swagger/components/responses/401.yaml
+# 409
 
-description: Unauthorized error
+description: Email already in use
 content:
   application/json:
     schema:
@@ -12,10 +12,10 @@ content:
       properties:
         status:
           type: integer
-          example: 401
+          example: 409
         message:
           type: string
-          example: UnauthorizedError
+          example: Email already in use
         data:
           type: object
           required:
@@ -23,5 +23,4 @@ content:
           properties:
             message:
               type: string
-              example: 'Access token expired'
-
+              example: 'Email already in use'

@@ -57,12 +57,6 @@ responses:
             - message
             - data
           properties:
-            # status:
-            #  type: integer
-            #  example: 409
-            # message:
-            #  type: string
-            #  example: Email already in use
             status:
               type: integer
               example: 201
@@ -74,6 +68,8 @@ responses:
               $ref: '../../components/schemas/user.yaml'
   '401':
     $ref: '../../components/responses/401.yaml'
+  '409':
+    $ref: '../../components/responses/409.yaml'
 
 
 
