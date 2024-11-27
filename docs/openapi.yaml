@@ -19,7 +19,7 @@ tags:
     description: Auth operations.
 servers:
   - url: http://localhost:3000
-  - url: https://nodejs-hw-mongodb-7-2.onrender.com
+  - url: https://nodejs-hw-mongodb-7-v54v.onrender.com
 paths:
   #додаємо get  всих контактів
   /contacts:
