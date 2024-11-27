@@ -14,7 +14,7 @@
       "url": "http://localhost:3000"
     },
     {
-      "url": "https://example.com/api/v1"
+      "url": "https://nodejs-hw-mongodb-7-2.onrender.com"
     }
   ],
   "tags": [
@@ -191,32 +191,6 @@
             "bearerAuth": []
           }
         ],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "name",
-            "schema": {
-              "type": "string"
-            },
-            "example": "name"
-          },
-          {
-            "in": "query",
-            "name": "phoneNumber",
-            "schema": {
-              "type": "string"
-            },
-            "example": "1112233"
-          },
-          {
-            "in": "query",
-            "name": "email",
-            "schema": {
-              "type": "string"
-            },
-            "example": "John_Doe123@gmail.com"
-          }
-        ],
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -243,6 +217,11 @@
                     "description": "Contact's email",
                     "type": "string",
                     "example": "John_Doe123@gmail.com"
+                  },
+                  "isFavourite": {
+                    "description": "Contact's isFavourite",
+                    "type": "boolean",
+                    "example": "isFavourite true"
                   },
                   "contactType": {
                     "description": "Contact's contactType",
@@ -397,14 +376,7 @@
                   "properties": {
                     "status": {
                       "type": "integer",
-                      "example": 204
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "send"
-                    },
-                    "data": {
-                      "type": "object",
+                      "example": 204,
                       "$ref": "#/components/schemas/contact"
                     }
                   }
@@ -441,30 +413,6 @@
               "type": "string",
               "example": "65ca67e7ae7f10c88b598384"
             }
-          },
-          {
-            "in": "query",
-            "name": "name",
-            "schema": {
-              "type": "string"
-            },
-            "example": "name"
-          },
-          {
-            "in": "query",
-            "name": "phoneNumber",
-            "schema": {
-              "type": "string"
-            },
-            "example": "5552233"
-          },
-          {
-            "in": "query",
-            "name": "email",
-            "schema": {
-              "type": "string"
-            },
-            "example": "Lui_Doe123@gmail.com"
           }
         ],
         "requestBody": {
@@ -493,6 +441,11 @@
                     "description": "Contact's email",
                     "type": "string",
                     "example": "Lui_Doe123@gmail.com"
+                  },
+                  "isFavourite": {
+                    "description": "Contact's isFavourite",
+                    "type": "boolean",
+                    "example": "isFavourite true"
                   },
                   "contactType": {
                     "description": "Contact's contactType",

@@ -8,22 +8,6 @@ operationId: createContact
 description: 'Create a contact with payload'
 security:
   - bearerAuth: []
-parameters:
-  - in: query
-    name: name
-    schema:
-      type: string
-    example: 'name'
-  - in: query
-    name: phoneNumber
-    schema:
-      type: string
-    example: '1112233'
-  - in: query
-    name: email
-    schema:
-      type: string
-    example: 'John_Doe123@gmail.com'
 requestBody:
   content:
     multipart/form-data:
@@ -47,6 +31,10 @@ requestBody:
            description: "Contact's email"
            type: string
            example: 'John_Doe123@gmail.com'
+          isFavourite:
+            description: "Contact's isFavourite"
+            type: boolean
+            example: 'isFavourite true'
           contactType:
             description: "Contact's contactType"
             type: string

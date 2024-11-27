@@ -13,21 +13,6 @@ parameters:
     schema:
       type: string
       example: '65ca67e7ae7f10c88b598384'
-  - in: query
-    name: name
-    schema:
-      type: string
-    example: 'name'
-  - in: query
-    name: phoneNumber
-    schema:
-      type: string
-    example: '5552233'
-  - in: query
-    name: email
-    schema:
-      type: string
-    example: 'Lui_Doe123@gmail.com'
 requestBody:
   content:
     multipart/form-data:
@@ -51,6 +36,10 @@ requestBody:
            description: "Contact's email"
            type: string
            example: 'Lui_Doe123@gmail.com'
+          isFavourite:
+            description: "Contact's isFavourite"
+            type: boolean
+            example: 'isFavourite true'
           contactType:
             description: "Contact's contactType"
             type: string
