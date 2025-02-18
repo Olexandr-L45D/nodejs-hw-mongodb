@@ -47,6 +47,15 @@ paths:
   /auth/refresh:
     post:
       $ref: ../swagger/paths/auth/refresh.yaml
+  /auth/reset-pwd:
+    post:
+      $ref: ../swagger/paths/auth/reset-pwd.yaml
+  /auth/get-oauth-url:
+    post:
+      $ref: ../swagger/paths/auth/get-oauth-url.yaml
+  /auth/send-reset-email:
+    post:
+      $ref: ../swagger/paths/auth/send-reset-email.yaml
 components:
   securitySchemes:
     bearerAuth:

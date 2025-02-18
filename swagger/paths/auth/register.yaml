@@ -65,11 +65,22 @@ responses:
               example: Successfully registered a user!
             data:
               type: object
+              required:
+                - accessToken
+              properties:
+                accessToken:
+                type: string
+                example: 'mWv3Qm6b1XJof0rOJSfuZCkuA07zM0fHmWOGYcY9'
+                refreshToken:
+                  type: string
+                  example: 'd9H4sXl8AqP5oC2mJZvTNlGuK03xM1rLtWOKFbY7'
               $ref: '../../components/schemas/user.yaml'
   '401':
     $ref: '../../components/responses/401.yaml'
   '409':
     $ref: '../../components/responses/409.yaml'
+  '500':
+    $ref: '../../components/responses/500.yaml'
 
 
 

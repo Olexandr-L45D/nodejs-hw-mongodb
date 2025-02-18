@@ -584,6 +584,18 @@
                     },
                     "data": {
                       "type": "object",
+                      "required": [
+                        "accessToken"
+                      ],
+                      "properties": {
+                        "accessToken": null,
+                        "type": "string",
+                        "example": "mWv3Qm6b1XJof0rOJSfuZCkuA07zM0fHmWOGYcY9",
+                        "refreshToken": {
+                          "type": "string",
+                          "example": "d9H4sXl8AqP5oC2mJZvTNlGuK03xM1rLtWOKFbY7"
+                        }
+                      },
                       "$ref": "#/components/schemas/user"
                     }
                   }
@@ -596,6 +608,9 @@
           },
           "409": {
             "$ref": "#/components/responses/409"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
           }
         }
       }
@@ -679,6 +694,18 @@
                     },
                     "data": {
                       "type": "object",
+                      "required": [
+                        "accessToken"
+                      ],
+                      "properties": {
+                        "accessToken": null,
+                        "type": "string",
+                        "example": "mWv3Qm6b1XJof0rOJSfuZCkuA07zM0fHmWOGYcY9",
+                        "refreshToken": {
+                          "type": "string",
+                          "example": "d9H4sXl8AqP5oC2mJZvTNlGuK03xM1rLtWOKFbY7"
+                        }
+                      },
                       "$ref": "#/components/schemas/user"
                     }
                   }
@@ -775,46 +802,13 @@
         "tags": [
           "Auth"
         ],
-        "summary": "Refresh user",
-        "operationId": "refreshUser",
-        "description": "Refresh users token",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "email",
-            "schema": {
-              "type": "string"
-            },
-            "example": "Jonni_Do1@gmail.com"
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": [
-                  "email"
-                ],
-                "properties": {
-                  "email": {
-                    "description": "User's email",
-                    "type": "string",
-                    "example": "John_Doe123@gmail.com"
-                  }
-                }
-              }
-            }
-          }
-        },
+        "summary": "Refresh token of user",
+        "operationId": "refreshTokenUser",
+        "description": "Refresh the user's access token using the refresh token stored in cookies.",
+        "security": [],
         "responses": {
           "200": {
-            "description": "Refresh users token",
+            "description": "Refreshed a session of user",
             "content": {
               "application/json": {
                 "schema": {
@@ -831,11 +825,19 @@
                     },
                     "message": {
                       "type": "string",
-                      "example": "Successfully refresh users token!"
+                      "example": "Successfully refreshed a session!"
                     },
                     "data": {
                       "type": "object",
-                      "$ref": "#/components/schemas/user"
+                      "required": [
+                        "accessToken"
+                      ],
+                      "properties": {
+                        "accessToken": {
+                          "type": "string",
+                          "example": "mWv3Qm6b1XJof0rOJSfuZCkuA07zM0fHmWOGYcY9"
+                        }
+                      }
                     }
                   }
                 }
@@ -844,6 +846,211 @@
           },
           "401": {
             "$ref": "#/components/responses/401"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/auth/reset-pwd": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Reset password",
+        "operationId": "resetPassword",
+        "description": "Reset a user's password with payload",
+        "security": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "password",
+                  "token"
+                ],
+                "properties": {
+                  "password": {
+                    "description": "User new password",
+                    "type": "string",
+                    "example": "111223Jn",
+                    "minLength": 8,
+                    "maxLength": 64
+                  },
+                  "token": {
+                    "description": "User's token from url",
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzMzZTU1MWNlZTI4ZGVkYjQ2ZjhlNWMiLCJlbWFpbCI6ImFubmFsYWt1c0B1a3IubmV0IiwiaWF0IjoxNzMxNjIzMjc0LCJleHAiOjE3MzE2MjM1NzR9.KQyctEJouw58BZbNHAiVl-dtFnnRpipb8OHj_hOjGQo"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully reset password",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Password was successfully reset!"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/auth/get-oauth-url": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Generate Google OAuth URL",
+        "operationId": "getGoogleOAuthUrl",
+        "description": "Generates a Google OAuth URL to redirect users for authentication",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Successfully generated Google OAuth URL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully get Google OAuth url!"
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "url"
+                      ],
+                      "properties": {
+                        "url": {
+                          "type": "string",
+                          "description": "Google OAuth URL to be used for redirecting users to authentication",
+                          "example": "https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=your-client-id&redirect_uri=https://your-redirect-uri&scope=https://www.googleapis.com/auth/userinfo.email"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or expired authorization code",
+            "$ref": "#/components/responses/401"
+          },
+          "500": {
+            "description": "Internal server error",
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/auth/send-reset-email": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Send reset email to user",
+        "operationId": "sednRestEmailToUser",
+        "description": "Send email to user to reset password",
+        "security": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email"
+                ],
+                "properties": {
+                  "email": {
+                    "description": "User's email",
+                    "type": "string",
+                    "example": "kat8@example.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Send reset password email",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Reset password email was successfully sent!"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
           }
         }
       }
@@ -1034,6 +1241,36 @@
                       "example": "Email already in use"
                     }
                   }
+                }
+              }
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "Internal Server Error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "status",
+                "message",
+                "error"
+              ],
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 500
+                },
+                "message": {
+                  "type": "string",
+                  "example": "InternalServerError"
+                },
+                "error": {
+                  "type": "string",
+                  "description": "Detailed error message for debugging purposes.",
+                  "example": "Unexpected database error occurred"
                 }
               }
             }

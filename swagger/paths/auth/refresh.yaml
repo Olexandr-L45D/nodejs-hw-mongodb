@@ -1,32 +1,13 @@
-# paths/auth/refresh.yaml
 tags:
   - Auth
-summary: Refresh user
-operationId: refreshUser
-description: 'Refresh users token'
-security:
-  - bearerAuth: []
-parameters:
-  - in: query
-    name: email
-    schema:
-      type: string
-    example: 'Jonni_Do1@gmail.com'
-requestBody:
-  content:
-    application/json:
-      schema:
-        type: object
-        required:
-          - email
-        properties:
-          email:
-           description: "User's email"
-           type: string
-           example: 'John_Doe123@gmail.com'
+summary: Refresh token of user
+operationId: refreshTokenUser
+description: Refresh the user's access token using the refresh token stored in cookies.
+security: []
+
 responses:
   '200':
-    description: Refresh users token
+    description: Refreshed a session of user
     content:
       application/json:
         schema:
@@ -41,14 +22,16 @@ responses:
               example: 200
             message:
               type: string
-              example: Successfully refresh users token!
+              example: Successfully refreshed a session!
             data:
               type: object
-              $ref: '../../components/schemas/user.yaml'
+              required:
+                - accessToken
+              properties:
+                accessToken:
+                  type: string
+                  example: 'mWv3Qm6b1XJof0rOJSfuZCkuA07zM0fHmWOGYcY9'
   '401':
     $ref: '../../components/responses/401.yaml'
-
-
-
-
-
+  '500':
+    $ref: '../../components/responses/500.yaml'
