@@ -15,9 +15,11 @@ import {
 import { generateAuthUrl } from '../utils/googleOAuth2.js';
 
 const setupSession = (res, session) => {
+  // const { _id, refreshToken } = session;
   res.cookie('refreshToken', session.refreshToken, {
     httpOnly: true,
-    sameSite: 'None',
+    sameSite: 'None', // ✅ Потрібно для – дозволяє відправляти куки між доменами
+    secure: true, // ✅ Потрібно для HTTPS!  – дозволяє передавати куки тільки через HTTPS
     expires: new Date(Date.now() + THERTY_DAY),
   });
   res.cookie('sessionId', session._id, {
@@ -26,24 +28,6 @@ const setupSession = (res, session) => {
     expires: new Date(Date.now() + THERTY_DAY),
   });
 };
-
-// const setupSession = (res, session) => {
-//   const { _id, refreshToken } = session;
-
-//   res.cookie('refreshToken', refreshToken, {
-//     httpOnly: true,
-//     sameSite: 'None',
-//     secure: true,
-//     expires: new Date(Date.now() + THERTY_DAY),
-//   });
-
-//   res.cookie('sessionId', _id, {
-//     httpOnly: true,
-//     sameSite: 'None',
-//     secure: true,
-//     expires: new Date(Date.now() + THERTY_DAY),
-//   });
-// };
 
 export const registerUserController = async (req, res) => {
   const user = await registerUser(req.body);
