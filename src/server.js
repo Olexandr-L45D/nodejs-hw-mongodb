@@ -24,7 +24,10 @@ export const setupServer = async () => {
 
   app.use(
     cors({
-      origin: 'https://track-rental-auth-react-ts.vercel.app', // 👈 Додай URL фронтенду
+      origin: [
+        'https://track-rental-auth-react-ts.vercel.app',
+        'http://localhost:5173',
+      ],
       credentials: true, // Дозволяє передавати cookies та токени
       allowedHeaders: ['Content-Type', 'Authorization'], // Дозволені заголовки
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Дозволені методи
