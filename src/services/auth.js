@@ -15,6 +15,11 @@ import jwt from 'jsonwebtoken';
 import handlebars from 'handlebars';
 import path from 'node:path';
 import fs from 'node:fs/promises';
+import {
+  getUsernameFromGoogleTokenPayload,
+  validateCode,
+} from '../utils/googleOAuth2.js';
+// import { generateActivationToken } from '../utils/generateActivationToken.js';
 
 const appDomain = env('APP_DOMAIN');
 // const jwtSecret = env('JWT_SECRET');
@@ -221,55 +226,82 @@ export const verifyUser = async (token) => {
   }
 };
 
-// export const resetPassword = async (payload) => {
-//   let entries;
-//   try {
-//     entries = jwt.verify(payload.token, env('JWT_SECRET'));
-//   } catch (err) {
-//     if (err instanceof Error) throw createHttpError(401, err.message);
-//     throw err;
-//   }
-//   const user = await UsersCollection.findOne({
-//     email: entries.email,
-//     _id: entries.sub,
+//  const confirmEmailTemplatePath = path.join(
+//     TEMPLATES_DIR,
+//     'confirm-email.html',
+//   );
+
+//   const templateSource = (
+//     await fs.readFile(confirmEmailTemplatePath)
+//   ).toString();
+
+//   const template = handlebars.compile(templateSource);
+//   const html = template({
+//     link: `${env('FRONTEND_DOMAIN')}/confirm-email?token=${activateToken}`,
 //   });
 
-//   if (!user) {
-//     throw createHttpError(404, 'User not found');
-//   }
-
-//   const encryptedPassword = await bcrypt.hash(payload.password, 10);
-
-//   await UsersCollection.updateOne(
-//     { _id: user._id },
-//     { password: encryptedPassword },
-//   );
-// };
-
-// export const verifyUser = async (token) => {
 //   try {
-//     const { email } = jwt.verify(token, jwtSecret);
-//     const user = await findUser({ email });
-//     if (!user) {
-//       throw createHttpError(404, `${email} not found`);
-//     }
-//     return await UsersCollection.findByIdAndUpdate(user._id, { verify: true });
+//     await sendEmail({
+//       from: env(SMTP.SMTP_FROM),
+//       to: email,
+//       subject: 'Confirm your email',
+//       html,
+//     });
 //   } catch (error) {
-//     throw createHttpError(401, error.message);
+//     throw createHttpError(500, error.message || 'Email sending failed');
 //   }
+//   return;
 // };
 
-// Для налаштування сховища ми скористаємося методом бібліотеки diskStorage. Налаштування сховища для бібліотеки multer включає два основні параметри: destination і filename.
+export const confirmEmail = async (payload) => {
+  const { token } = payload;
 
-// refreshUsersSession:
-// Додали оновлення кукі після рефрешу.
+  if (!token) {
+    throw createHttpError(400, 'Activation token required');
+  }
 
-// requestResetToken:
-// Тепер токен одноразовий і зберігається в базі.
+  try {
+    const decoded = jwt.verify(token, env('JWT_SECRET'));
 
-// resetPassword:
-// Після скидання пароля видаляється токен, щоб його не можна було використати двічі.
+    const user = await UsersCollection.findById({ _id: decoded.sub });
+    if (!user) {
+      throw createHttpError(404, 'User not found');
+    }
+    if (user.isActive) {
+      throw createHttpError(400, 'Account is already activated');
+    }
 
-// verifyUser:
-//  Тепер перевіряється, чи юзер вже верифікований, щоб не оновлювати зайвий раз.
-//  З цими виправленнями система авторизації, скидання пароля та підтвердження email працюватимуть стабільно та безпечно!
+    await UsersCollection.updateOne({ _id: user._id }, { isActive: true });
+    await SessionsCollection.findOneAndDelete({ userId: user._id });
+
+    const session = createSession();
+
+    return SessionsCollection.create({ userId: user._id, ...session });
+  } catch (err) {
+    if (err instanceof Error)
+      throw createHttpError(401, 'Token is expired or invalid.');
+    throw err;
+  }
+};
+
+/* GOOGLE OAUTH */
+export const loginOrSignupWithGoogle = async (code) => {
+  const loginTicket = await validateCode(code);
+  const payload = loginTicket.getPayload();
+  if (!payload) throw createHttpError(401);
+
+  let user = await UsersCollection.findOne({ email: payload.email });
+  if (!user) {
+    const password = await bcrypt.hash(randomBytes(10), 10);
+    user = await UsersCollection.create({
+      email: payload.email,
+      name: getUsernameFromGoogleTokenPayload(payload),
+      password,
+      photo: payload.picture,
+      isActive: true,
+    });
+  }
+
+  const newSession = createSession();
+  return await SessionsCollection.create({ userId: user._id, ...newSession });
+};
