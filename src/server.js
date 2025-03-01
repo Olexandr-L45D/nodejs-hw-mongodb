@@ -15,6 +15,7 @@ export const setupServer = async () => {
   const app = express();
 
   app.use((req, res, next) => {
+    res.header('Referrer-Policy', 'no-referrer-when-downgrade');
     res.header('Access-Control-Allow-Credentials', 'true');
     next();
   });
