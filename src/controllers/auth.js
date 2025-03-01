@@ -1,5 +1,6 @@
 import { THERTY_DAY } from '../constants/index.js';
 import { SessionsCollection } from '../db/models/session.js';
+
 import {
   registerUser,
   loginUser,
@@ -14,17 +15,22 @@ import {
 } from '../services/auth.js';
 import { generateAuthUrl } from '../utils/googleOAuth2.js';
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 const setupSession = (res, session) => {
   // const { _id, refreshToken } = session;
   res.cookie('refreshToken', session.refreshToken, {
     httpOnly: true,
     sameSite: 'None', // ✅ Потрібно для – дозволяє відправляти куки між доменами
-    secure: true, // ✅ Потрібно для HTTPS!  – дозволяє передавати куки тільки через HTTPS
+    secure: isProduction, // ❌ Локально НЕ буде secure, на проді БУДЕ!
+    // secure: true, // ✅ Потрібно для HTTPS!  – дозволяє передавати куки тільки через HTTPS
     expires: new Date(Date.now() + THERTY_DAY),
   });
   res.cookie('sessionId', session._id, {
     httpOnly: true,
     sameSite: 'None',
+    secure: isProduction, // ❌ Локально НЕ буде secure, на проді БУДЕ
+    // secure: true,
     expires: new Date(Date.now() + THERTY_DAY),
   });
 };
@@ -45,10 +51,14 @@ export const registerUserController = async (req, res) => {
   // Встановлюємо HTTP-only кукі
   res.cookie('refreshToken', session.refreshToken, {
     httpOnly: true,
+    sameSite: 'None',
+    secure: isProduction,
     expires: new Date(Date.now() + THERTY_DAY),
   });
   res.cookie('sessionId', session._id, {
     httpOnly: true,
+    sameSite: 'None',
+    secure: isProduction,
     expires: new Date(Date.now() + THERTY_DAY),
   });
 
@@ -67,10 +77,14 @@ export const loginUserController = async (req, res) => {
   const session = await loginUser(req.body);
   res.cookie('refreshToken', session.refreshToken, {
     httpOnly: true,
+    sameSite: 'None',
+    secure: isProduction,
     expires: new Date(Date.now() + THERTY_DAY),
   });
   res.cookie('sessionId', session._id, {
     httpOnly: true,
+    sameSite: 'None',
+    secure: isProduction,
     expires: new Date(Date.now() + THERTY_DAY),
   });
   res.status(200).json({
@@ -99,10 +113,14 @@ export const refreshUserSessionController = async (req, res) => {
 
   res.cookie('refreshToken', session.refreshToken, {
     httpOnly: true,
+    sameSite: 'None',
+    secure: isProduction,
     expires: new Date(Date.now() + THERTY_DAY),
   });
   res.cookie('sessionId', session._id, {
     httpOnly: true,
+    sameSite: 'None',
+    secure: isProduction,
     expires: new Date(Date.now() + THERTY_DAY),
   });
 
@@ -164,6 +182,13 @@ export const getGoogleOAuthUrlController = async (req, res) => {
 
 export const loginWithGoogleController = async (req, res) => {
   const session = await loginOrSignupWithGoogle(req.body.code);
+
+  res.set({
+    'Access-Control-Allow-Origin':
+      'https://track-rental-auth-react-ts.vercel.app',
+    'Access-Control-Allow-Credentials': 'true',
+  });
+
   setupSession(res, session);
   res.json({
     status: 200,

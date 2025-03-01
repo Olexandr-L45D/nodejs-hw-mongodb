@@ -9,19 +9,17 @@ import contactsRout from './routers/contacts.js';
 import authRouter from './routers/auth.js';
 import { UPLOAD_DIR } from './constants/index.js';
 import { swaggerDocs } from './middlewares/swaggerDocs.js';
-
 const PORT = Number(env('PORT', '3000'));
 
 export const setupServer = async () => {
   const app = express();
-  app.use(
-    express.json({
-      type: ['application/json', 'application/VideoEncoder.api+json'],
-      limit: '100kb',
-    }),
-  );
-  // const cors = require('cors');
 
+  app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Credentials', 'true');
+    next();
+  });
+
+  // ✅ Додаємо CORS перед `cookieParser`
   app.use(
     cors({
       origin: [
@@ -30,13 +28,32 @@ export const setupServer = async () => {
       ],
       credentials: true, // Дозволяє передавати cookies та токени
       allowedHeaders: ['Content-Type', 'Authorization'], // Дозволені заголовки
-      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Дозволені методи
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'], // Дозволені методи
     }),
   );
 
-  // app.use(cors());
-  app.use(cookieParser());
-  app.options('*', cors()); // Дозволяє всі preflight-запити
+  app.use(cookieParser()); // ✅ `cookieParser()` після `cors()`
+
+  // ✅ Preflight запити теж з `credentials: true`
+  app.options(
+    '*',
+    cors({
+      origin: [
+        'https://track-rental-auth-react-ts.vercel.app',
+        'http://localhost:5173',
+      ],
+      credentials: true,
+      allowedHeaders: ['Content-Type', 'Authorization'],
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    }),
+  );
+
+  app.use(
+    express.json({
+      type: ['application/json', 'application/VideoEncoder.api+json'],
+      limit: '100kb',
+    }),
+  );
 
   app.use(logger);
   app.get('/', async (req, res) => {
