@@ -27,6 +27,8 @@ export const setupServer = async () => {
         env('APP_DOMAIN'),
         'https://track-rental-auth-react-ts.vercel.app',
         'http://localhost:5173',
+        'http://localhost:5175',
+        'http://localhost:5176',
       ],
       credentials: true, // Дозволяє передавати cookies та токени
       allowedHeaders: ['Content-Type', 'Authorization'], // Дозволені заголовки
@@ -43,6 +45,8 @@ export const setupServer = async () => {
       origin: [
         'https://track-rental-auth-react-ts.vercel.app',
         'http://localhost:5173',
+        'http://localhost:5175',
+        'http://localhost:5176',
       ],
       credentials: true,
       allowedHeaders: ['Content-Type', 'Authorization'],
@@ -53,7 +57,7 @@ export const setupServer = async () => {
   app.use(
     express.json({
       type: ['application/json', 'application/VideoEncoder.api+json'],
-      limit: '100kb',
+      limit: '500kb',
     }),
   );
 

@@ -1,4 +1,4 @@
-# security:
+# security: Новий УРЛ: nodejs-hw-mongodb-production.up.railway.app
   # - bearerAuth: []
 # Цей блок вказує, що для доступу до операції потрібна аутентифікація за допомогою Bearer Token (bearerAuth), який був визначений у /docs/openapi.yaml
 # /docs/openapi.yaml
@@ -19,7 +19,7 @@ tags:
     description: Auth operations.
 servers:
   - url: http://localhost:3000
-  - url: https://nodejs-hw-mongodb-7-v54v.onrender.com
+  - url: https://nodejs-hw-mongodb-production.up.railway.app
 paths:
   #додаємо get  всих контактів
   /contacts:
