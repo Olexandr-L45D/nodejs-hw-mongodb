@@ -31,7 +31,7 @@ export const setupServer = async () => {
         'http://localhost:5176',
       ],
       credentials: true, // Дозволяє передавати cookies та токени
-      allowedHeaders: ['Content-Type', 'Authorization'], // Дозволені заголовки
+      allowedHeaders: ['Content-Type', 'Authorization', 'x-access-token'], // Дозволені заголовки
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'], // Дозволені методи
     }),
   );
@@ -49,7 +49,7 @@ export const setupServer = async () => {
         'http://localhost:5176',
       ],
       credentials: true,
-      allowedHeaders: ['Content-Type', 'Authorization'],
+      allowedHeaders: ['Content-Type', 'Authorization', 'x-access-token'],
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     }),
   );
