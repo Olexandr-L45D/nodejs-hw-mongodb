@@ -24,6 +24,7 @@ export const setupServer = async () => {
   app.use(
     cors({
       origin: [
+        env('APP_DOMAIN'),
         'https://track-rental-auth-react-ts.vercel.app',
         'http://localhost:5173',
       ],
