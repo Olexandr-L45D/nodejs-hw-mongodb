@@ -21,7 +21,7 @@ import {
 } from '../utils/googleOAuth2.js';
 // import { generateActivationToken } from '../utils/generateActivationToken.js';
 
-const appDomain = env('APP_MYDOMAIN');
+const appDomain = env('FRONTEND_DOMAIN');
 // const jwtSecret = env('JWT_SECRET');
 
 export const createSession = () => {
