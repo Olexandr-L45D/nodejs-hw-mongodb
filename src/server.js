@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+
 import { env } from './utils/env.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
@@ -9,6 +10,7 @@ import contactsRout from './routers/contacts.js';
 import authRouter from './routers/auth.js';
 import { UPLOAD_DIR } from './constants/index.js';
 import { swaggerDocs } from './middlewares/swaggerDocs.js';
+
 const PORT = Number(env('PORT', '3000'));
 
 export const setupServer = async () => {
@@ -60,6 +62,19 @@ export const setupServer = async () => {
       limit: '500kb',
     }),
   );
+
+  // додав додатковий Проксі для іншого бекенда
+  app.use('/proxy/campers', async (req, res) => {
+    try {
+      const response = await fetch(
+        'https://66b1f8e71ca8ad33d4f5f63e.mockapi.io/campers',
+      );
+      const data = await response.json();
+      res.json(data);
+    } catch (error) {
+      res.status(500).json({ error: 'Proxy request failed' }, error);
+    }
+  });
 
   app.use(logger);
   app.get('/', async (req, res) => {
